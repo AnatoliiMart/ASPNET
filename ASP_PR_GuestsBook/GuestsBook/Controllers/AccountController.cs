@@ -10,7 +10,9 @@ namespace GuestsBook.Controllers
     {
         private readonly MyDbContext _context;
         public AccountController(MyDbContext context) => _context = context;
-        // GET: AccountController
+
+        // GET: AccountController/Login
+        [HttpGet]
         public ActionResult Login()
         {
             if (_context.Users.ToList().Count == 0)
@@ -19,11 +21,11 @@ namespace GuestsBook.Controllers
             return View();
         }
 
-        // POST: AccountController/Create
+        // POST: AccountController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginMDL model)
-        { 
+        {
             if (_context.Users.ToList().Count == 0)
                 return RedirectToAction("Regist", "Account");
             if (!ModelState.IsValid)
@@ -36,14 +38,13 @@ namespace GuestsBook.Controllers
                 ModelState.AddModelError("", "Incorrect login or password!");
                 return View(model);
             }
+
             User user = users.First();
             string salt = user.Salt;
             byte[] password = Encoding.Unicode.GetBytes(salt + model.Password);
+            byte[] hashPassword = SHA256.HashData(password);
 
-            var sha256 = SHA256.Create();
-            byte[] hashPassword = sha256.ComputeHash(password);
-
-            StringBuilder hash = new StringBuilder(hashPassword.Length);
+            StringBuilder hash = new(hashPassword.Length);
             for (int i = 0; i < hashPassword.Length; i++)
                 hash.Append(string.Format("{0:X2}", hashPassword[i]));
 
@@ -54,6 +55,7 @@ namespace GuestsBook.Controllers
             }
             HttpContext.Session.SetString("FirstName", user.FirstName ?? string.Empty);
             HttpContext.Session.SetString("LastName", user.LastName ?? string.Empty);
+            HttpContext.Session.SetString("Login", user.Login);
             return RedirectToAction("Index", "Home");
         }
 
@@ -68,6 +70,11 @@ namespace GuestsBook.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
+            if (_context.Users.Any(x => x.Login == model.Login))
+            {
+                ModelState.AddModelError("", "This login is taken!");
+                return View(model);
+            }
 
             User user = new()
             {
@@ -81,17 +88,15 @@ namespace GuestsBook.Controllers
             RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
             randomNumberGenerator.GetBytes(saltbuf);
 
-            StringBuilder sb = new StringBuilder(16);
+            StringBuilder sb = new(16);
             for (int i = 0; i < 16; i++)
                 sb.Append(string.Format("{0:X2}", saltbuf[i]));
 
             string salt = sb.ToString();
             byte[] password = Encoding.Unicode.GetBytes(salt + model.Password);
+            byte[] hashPassword = SHA256.HashData(password);
 
-            var sha256 = SHA256.Create();
-            byte[] hashPassword = sha256.ComputeHash(password);
-
-            StringBuilder hash = new StringBuilder(hashPassword.Length);
+            StringBuilder hash = new(hashPassword.Length);
             for (int i = 0; i < hashPassword.Length; i++)
                 hash.Append(string.Format("{0:X2}", hashPassword[i]));
 
