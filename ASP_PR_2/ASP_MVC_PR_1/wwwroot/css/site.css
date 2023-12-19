@@ -1,0 +1,138 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+.movieItem{
+  width:100%;
+  padding: 10px;
+  margin:auto;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.iteminfo{
+    margin: auto;
+    width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.image{
+    width: 30%;
+    height: 100%;
+}
+.image img{
+    width: 100% !important;
+}
+.info {
+    background-color: green;
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    padding: 0 10px;
+    margin: 10px 0;
+    border-bottom: 3px solid red;
+    border-right: 3px solid red;
+    border-radius: 10px;
+    box-shadow: 10px 10px 15px 0px rgba(66, 68, 90, 1);
+}
+.info1 {
+    background-color: green;
+    width: 90%;
+    display: flex;
+    padding: 10px;
+    margin: 10px 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 10px;
+    border-bottom: 3px solid red;
+    border-right: 3px solid red;
+    border-radius: 10px;
+    box-shadow: 10px 10px 15px 0px rgba(66, 68, 90, 1);
+}
+.iteminfo h1{
+    font-size: 1.3em;
+    color: limegreen;
+}
+.info1 input {
+    margin: auto;
+    padding: 5px 12px;
+    font-size: .9em;
+    border-radius: 10px;
+    box-shadow: 10px 10px 15px 0px rgba(66, 68, 90, 1);
+}
+.info1 textarea {
+    width: 80%;
+    margin: 10px;
+    padding: 5px 12px;
+    font-size: .9em;
+    outline: none;
+    border-radius: 10px;
+    box-shadow: 10px 10px 15px 0px rgba(66, 68, 90, 1);
+}
+.iteminfo p {
+    margin-left: 15px;
+    padding-top: 12px;
+    font-size: 1em;
+    font-weight: bold;
+    color: goldenrod;
+}
+.info1 .text-info{
+    margin-top: 10px;
+}
+.movieItem img {
+    padding: 10px;
+    width: 30%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 10px 10px 15px 0px rgba(66, 68, 90, 1);
+}
+#myHR{
+    width: 85%;
+    margin: 10px auto;
+    height: 5px; 
+    color: black;
+    background-color: black;
+}
+.iteminfo .buttons {
+    width: 90%;
+    margin: 10px ;
+    display:flex;
+    align-items: center;
+    justify-content: flex-end
+}
+.iteminfo .buttons .btn {
+    width: 20%;
+    margin-left:20px;
+}
+.btn{
+    font-weight: bold;
+    box-shadow: 10px 10px 10px 0px rgba(66, 68, 90, 1);
+}

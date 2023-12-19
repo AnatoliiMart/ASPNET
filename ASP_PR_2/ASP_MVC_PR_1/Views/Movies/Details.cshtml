@@ -1,0 +1,37 @@
+﻿@model ASP_MVC_PR_1.Models.Movie
+
+@{
+    ViewData["Title"] = "Подробности";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Html.DisplayFor(model => model.MovieName)</h1>
+<hr />
+<div class="movieItem">
+    <img src="@Html.DisplayFor(model => model.PosterPath)" alt="photo" />
+    <div class="iteminfo">
+        <div class="info">
+            <h1>@Html.DisplayNameFor(model => model.Director):</h1>
+            <p>@Html.DisplayFor(model => model.Director)</p>
+        </div>
+        <div class="info">
+            <h1>@Html.DisplayNameFor(model => model.Genre):</h1>
+            <p>@Html.DisplayFor(model => model.Genre)</p>
+        </div>
+        <div class="info">
+            <h1> @Html.DisplayNameFor(model => model.RealeaseDate):</h1>
+            <p> @Html.DisplayFor(model => model.RealeaseDate)</p>
+        </div>
+
+        <div class="info1">
+            <h1> @Html.DisplayNameFor(model => model.Description):</h1>
+            <p>@Html.DisplayFor(model => model.Description)</p>
+        </div>
+        <div class="buttons">
+            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Изменить</a>
+            <a asp-action="Index" class="btn btn-info">Назад</a>
+        </div>
+    </div>            
+</div>
+
+

@@ -1,0 +1,53 @@
+﻿@model ASP_MVC_PR_1.Models.Movie
+
+@{
+    ViewData["Title"] = "Добавление фильма";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 style="text-align: center;">Добавление нового фильма</h1>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <div class="iteminfo">
+        <div class="info1">
+            <h1><label asp-for="MovieName" class="control-label"></label></h1>
+            <input asp-for="MovieName" class="form-control" />
+            <span asp-validation-for="MovieName" class="text-info"></span>
+        </div>
+        <div class="info1">
+            <h1><label asp-for="Director" class="control-label"></label></h1>
+            <input asp-for="Director" class="form-control" />
+            <span asp-validation-for="Director" class="text-info"></span>
+        </div>
+        <div class="info1">
+            <h1><label asp-for="Genre" class="control-label"></label></h1>
+            <input asp-for="Genre" class="form-control" />
+            <span asp-validation-for="Genre" class="text-info"></span>
+        </div>
+        <div class="info1">
+            <h1><label asp-for="RealeaseDate" class="control-label"></label></h1>
+            <input asp-for="RealeaseDate" class="form-control" />
+            <span asp-validation-for="RealeaseDate" class="text-info"></span>
+        </div>
+        <div class="info1">
+            <h1><label asp-for="Description" class="control-label"></label></h1>
+            @Html.TextAreaFor(model => Model.Description, 15, 54, null)
+            <span asp-validation-for="Description" class="text-info"></span>
+        </div>
+                
+        <div class="info1">
+            <h1><label asp-for="PosterPath" class="control-label"></label></h1>
+            <input type="file" name="fileUpload" asp-for="PosterPath" class="form-control" />
+            <span asp-validation-for="PosterPath" class="text-info"></span>
+        </div>
+        <div class="buttons">
+            <input type="submit" value="Создать" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-info">Назад</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

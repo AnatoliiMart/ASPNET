@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Movies</title>
+    <link href="style.css" rel="stylesheet" />
+    <script type="module" src="script.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 id="filmName">Enter the title of movie</h1>
+        <h1 id="rating" style="display: none"></h1>
+      </header>
+      <section id="main"  style="display: none;">
+        <div id="imgblck">
+            <img src="" alt="">
+        </div>
+        <div id="infoblck">
+            <p id="year"></p>
+            <p id="released"></p>
+            <p id="runtime"></p>
+            <p id="genre"></p>
+            <p id="director"></p>
+            <p id="writer"></p>
+            <p id="actors"></p>
+            <p id="plot"></p>
+            <p id="lang"></p>
+            <p id="country"></p>
+            <p id="awards"></p>
+        </div>
+      </section>
+      <footer>
+        <div id="searchBlock">
+          <input
+            id="title"
+            type="text"
+            name="Title"
+            value=""
+            placeholder="Movie title"
+          />
+          <button id="search" class="fineBtn" type="submit">Search</button>
+        </div>
+        <button id="reset" class="fineBtn" style="display: none;">Back</button>
+      </footer>
+    </div>
+  </body>
+</html>

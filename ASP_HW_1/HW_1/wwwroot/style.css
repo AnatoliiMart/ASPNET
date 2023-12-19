@@ -1,0 +1,83 @@
+﻿*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    width: 100%;
+    margin: auto;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+header{
+    width: 60%;
+    margin: 10px auto;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-evenly;
+    background: teal;
+    padding: 20px 0;
+    border: none;
+    border-radius: 20px;
+    
+}
+.fineBtn{
+    background: lightblue;
+    color: crimson;
+    font-weight:bold;
+    border: 2px solid transparent;
+    border-radius: 20px; 
+    font-size: 1em;
+    padding: 5px 10px;
+    margin-left: 10px;
+}
+.fineBtn:hover{
+    background: rgb(46, 196, 247);
+    box-shadow: 0px 0px 25px rgba(0, 17, 255, 1);
+}
+footer{
+    width: 60%;
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: teal;
+    padding: 20px;
+    border: none;
+    border-radius: 20px;
+
+}
+#searchBlock input{
+    font-size: 1em;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+section{
+    width: 60%;
+    margin: auto;
+    background: rgba(92, 228, 92, 0.568);
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    border: none;
+    border-radius: 20px;
+}
+#main #imgblck img{
+    margin: 10px;
+    width:auto;
+    height: auto;
+}
+#main #infoblck{
+    width: 40%;
+    height: 100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 20px;
+}
+#main #infoblck p{
+    margin: 3px 0;
+    color: rgb(218, 86, 9);
+}

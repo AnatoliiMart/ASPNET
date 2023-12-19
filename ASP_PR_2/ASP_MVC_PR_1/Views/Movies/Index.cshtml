@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ASP_MVC_PR_1.Models.Movie>
+
+@{
+    ViewData["Title"] = "Главная страница";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["SM"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SM"]
+    </div>
+}
+@if (Model.Count() == 0)
+{
+    <h1>Фильмов нету добавьте фильмы сюда</h1>
+    <p>
+        <a asp-action="Create" class="btn btn-info" style="margin-top: 15px">Добавить фильм</a>
+    </p>
+}
+else
+{
+    <h1>
+        @Model.Count() 
+        @if (Model.Count() % 10 == 2 || Model.Count() % 10 == 3 || Model.Count() % 10 == 4
+               && Model.Count() != 12 && Model.Count() != 13 && Model.Count() != 14)
+        {
+            Write("лучших фильма");
+        }
+        else if (Model.Count() % 10 == 1 && Model.Count() != 11)
+        {
+            Write("лучший фильм");
+        }
+        else 
+        {
+            Write("лучших фильмов");
+        }
+    </h1>
+     
+    <p>
+        <a asp-action="Create" class="btn btn-info" style="margin-top: 15px">Добавить фильм</a>
+    </p>
+    <div style="padding-top:30px">
+        <h3>Фильмы</h3>
+        @foreach (var mov in Model)
+        {
+            <div class="movieItem">
+                <a class="image" asp-action="Details" asp-route-id="@mov.Id"><img src="@mov.PosterPath" alt="photo" /></a>
+                <div class="iteminfo">
+                    <div class="info">
+                        <h1>Название:</h1>
+                        <p>@mov.MovieName</p>
+                    </div>
+                    <div class="info">
+                        <h1>Жанр:</h1>
+                        <p>@mov.Genre</p>
+                    </div>          
+                    <div class="buttons">
+                        <a asp-action="Edit" asp-route-id="@mov.Id" class="btn btn-primary">Изменить</a>
+                        <a asp-action="Details" asp-route-id="@mov.Id" class="btn btn-success">Подробности</a>
+                        <a asp-action="Delete" asp-route-id="@mov.Id" class="btn btn-danger">Удалить</a>
+                    </div>
+                </div>
+
+            </div>
+            <hr id="myHR" />
+        }
+    </div>
+}
+
+
+
