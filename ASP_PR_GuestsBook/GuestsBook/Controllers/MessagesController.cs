@@ -63,7 +63,7 @@ namespace GuestsBook.Controllers
             {
                 _context.Add(message);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(MyMessages));
             }
             ViewData["UserId"] = new SelectList(_context.Users.Where(x => x.Login == HttpContext.Session.GetString("Login")), "Id", "Login", message.UserId);
             return View(message);
@@ -116,7 +116,7 @@ namespace GuestsBook.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(MyMessages));
             }
             ViewData["UserId"] = new SelectList(_context.Users.Where(x => x.Login == HttpContext.Session.GetString("Login")), "Id", "Login", message.UserId);
             return View(message);
@@ -153,7 +153,7 @@ namespace GuestsBook.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyMessages));
         }
 
         private bool MessageExists(int id)

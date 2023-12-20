@@ -5,10 +5,14 @@
 }
 
 <h1>Index</h1>
+@if (Context.Session.GetString("LastName") != null
+    && Context.Session.GetString("FirstName") != null)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-info">Create New Message</a>
+    </p>
+}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>

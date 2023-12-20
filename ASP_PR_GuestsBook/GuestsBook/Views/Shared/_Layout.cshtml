@@ -10,41 +10,47 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-black border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GuestsBook</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Messages" asp-action="Index">GuestsBook</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (Context.Session.GetString("LastName") != null
-                            && Context.Session.GetString("FirstName") != null)
-                        {                       
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-evenly">
+                    
+                    @if (Context.Session.GetString("LastName") != null
+                        && Context.Session.GetString("FirstName") != null)
+                    {
+                        <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Messages" asp-action="MyMessages">My messages</a>
                             </li>
+                        </ul>
+                    <a class="navbar-brand" 
+                        asp-area="" 
+                        asp-controller="Messages" 
+                        asp-action="MyMessages"
+                    >
+                        @Context.Session.GetString("LastName")&nbsp;
+                        @Context.Session.GetString("FirstName")
+                    </a> 
+                    <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Messages" asp-action="Index">All messages</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Messages" asp-action="Index">Messages</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Messages" asp-action="MyMessages">My messages</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Regist">Registration</a>
-                            </li>
-                        }
-                    </ul>
+                        </ul>
+                        <a class="navbar-brand"
+                           asp-area=""
+                           asp-controller="Account"
+                           asp-action="Login">
+                           LOGIN
+                        </a>
+                    }
                 </div>
             </div>
         </nav>
