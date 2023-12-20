@@ -1,56 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using GuestsBook.Models;
+using GuestsBook.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using GuestsBook.Models;
 
 namespace GuestsBook.Controllers
 {
     public class MessagesController : Controller
     {
-        private readonly MyDbContext _context;
 
-        public MessagesController(MyDbContext context) => _context = context;
+
+        private readonly IMyRepository _repository;
+        public MessagesController(IMyRepository repository)
+        {
+            _repository = repository;
+        }
 
         // GET: Messages
-        public async Task<IActionResult> Index()
-        {
-            var myDbContext = _context.Messages.Include(x => x.User);
-            return View(await myDbContext.ToListAsync());
-        }
+        public async Task<IActionResult> Index() => View(await _repository.GetAllMessages());
+
         public async Task<IActionResult> MyMessages()
         {
-            User user = _context.Users.First(x => x.Login == HttpContext.Session.GetString("Login"));
-            var myDbContext = _context.Messages.Where(m => m.User.Id == user.Id);
-            return View(await myDbContext.ToListAsync());
+            User userSpecification = await _repository.GetUserByLogin(HttpContext.Session.GetString("Login")).FirstAsync();
+            return View(await _repository.GetSelfMessages(userSpecification));
         }
 
         // GET: Messages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var message = await _context.Messages
-                .Include(m => m.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (message == null)
-            {
+            Message? msg = await _repository.GetMessageDetails(id);
+
+            if (msg == null)
                 return NotFound();
-            }
 
-            return View(message);
+            return View(msg);
         }
 
         // GET: Messages/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users.Where(x => x.Login == HttpContext.Session.GetString("Login")), "Id", "Login");
+            ViewData["UserId"] = new SelectList(_repository.GetUserByLogin(HttpContext.Session.GetString("Login")), "Id", "Login");
             return View();
         }
 
@@ -61,11 +53,11 @@ namespace GuestsBook.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(message);
-                await _context.SaveChangesAsync();
+                await _repository.CreateMessage(message);
+                await _repository.SaveChanges();
                 return RedirectToAction(nameof(MyMessages));
             }
-            ViewData["UserId"] = new SelectList(_context.Users.Where(x => x.Login == HttpContext.Session.GetString("Login")), "Id", "Login", message.UserId);
+            ViewData["UserId"] = new SelectList(_repository.GetUserByLogin(HttpContext.Session.GetString("Login")), "Id", "Login", message.UserId);
             return View(message);
         }
 
@@ -73,16 +65,15 @@ namespace GuestsBook.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var message = await _context.Messages.FindAsync(id);
+            var message = await _repository.GetMessage(id);
+
             if (message == null)
-            {
                 return NotFound();
-            }
-            ViewData["UserId"] = new SelectList(_context.Users.Where(x => x.Login == HttpContext.Session.GetString("Login")), "Id", "Login", message.UserId);
+
+            ViewData["UserId"] = new SelectList(_repository.GetUserByLogin(HttpContext.Session.GetString("Login")), "Id", "Login", message.UserId);
+
             return View(message);
         }
 
@@ -94,31 +85,25 @@ namespace GuestsBook.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id,Mesage,UserId")] Message message)
         {
             if (id != message.Id)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(message);
-                    await _context.SaveChangesAsync();
+                    _repository.UpdateMessage(message);
+                    await _repository.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MessageExists(message.Id))
-                    {
+                    if (!await _repository.MessageExists(message.Id))
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(MyMessages));
             }
-            ViewData["UserId"] = new SelectList(_context.Users.Where(x => x.Login == HttpContext.Session.GetString("Login")), "Id", "Login", message.UserId);
+            ViewData["UserId"] = new SelectList(_repository.GetUserByLogin(HttpContext.Session.GetString("Login")), "Id", "Login", message.UserId);
             return View(message);
         }
 
@@ -126,17 +111,12 @@ namespace GuestsBook.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var message = await _context.Messages
-                .Include(m => m.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var message = await _repository.GetMessageDetails(id);
+
             if (message == null)
-            {
                 return NotFound();
-            }
 
             return View(message);
         }
@@ -146,19 +126,11 @@ namespace GuestsBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var message = await _context.Messages.FindAsync(id);
-            if (message != null)
-            {
-                _context.Messages.Remove(message);
-            }
-
-            await _context.SaveChangesAsync();
+            await _repository.DeleteMessage(id);
+            await _repository.SaveChanges();
             return RedirectToAction(nameof(MyMessages));
         }
 
-        private bool MessageExists(int id)
-        {
-            return _context.Messages.Any(e => e.Id == id);
-        }
+
     }
 }

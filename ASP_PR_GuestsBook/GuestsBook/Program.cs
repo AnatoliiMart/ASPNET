@@ -1,4 +1,5 @@
 using GuestsBook.Models;
+using GuestsBook.Repos;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuestsBook
@@ -10,6 +11,7 @@ namespace GuestsBook
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDistributedMemoryCache();// добавляем IDistributedMemoryCache
+           
             builder.Services.AddSession();  // Добавляем сервисы сессии
 
             // Получаем строку подключения из файла конфигурации
@@ -17,7 +19,7 @@ namespace GuestsBook
 
             // добавляем контекст ApplicationContext в качестве сервиса в приложение
             builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(connection));
-
+            builder.Services.AddScoped<IMyRepository, MyRepository>();
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
