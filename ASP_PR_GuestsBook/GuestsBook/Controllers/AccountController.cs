@@ -1,21 +1,23 @@
 ﻿using GuestsBook.Models;
-using Microsoft.AspNetCore.Http;
+using GuestsBook.Repos;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace GuestsBook.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly MyDbContext _context;
-        public AccountController(MyDbContext context) => _context = context;
+
+        private readonly IAccountsRepository _repository;
+        public AccountController(IAccountsRepository repository)
+        {
+            _repository = repository;
+        }
 
         // GET: AccountController/Login
         [HttpGet]
-        public ActionResult Login()
+        public async Task<IActionResult> Login()
         {
-            if (_context.Users.ToList().Count == 0)
+            if ((await _repository.GetAllUsers()).Count == 0)
                 return RedirectToAction("Regist", "Account");
 
             return View();
@@ -24,14 +26,14 @@ namespace GuestsBook.Controllers
         // POST: AccountController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginMDL model)
+        public async Task<IActionResult> Login(LoginMDL model)
         {
-            if (_context.Users.ToList().Count == 0)
+            if ((await _repository.GetAllUsers()).Count == 0)
                 return RedirectToAction("Regist", "Account");
             if (!ModelState.IsValid)
                 return View(model);
 
-            IQueryable<User> users = _context.Users.Where(x => x.Login == model.Login);
+            IQueryable<User> users = _repository.GetUsersByLogin(model);
 
             if (!users.Any())
             {
@@ -40,15 +42,8 @@ namespace GuestsBook.Controllers
             }
 
             User user = users.First();
-            string salt = user.Salt;
-            byte[] password = Encoding.Unicode.GetBytes(salt + model.Password);
-            byte[] hashPassword = SHA256.HashData(password);
 
-            StringBuilder hash = new(hashPassword.Length);
-            for (int i = 0; i < hashPassword.Length; i++)
-                hash.Append(string.Format("{0:X2}", hashPassword[i]));
-
-            if (user.Password != hash.ToString())
+            if (await _repository.IsPasswordCorrect(user, model))
             {
                 ModelState.AddModelError("", "Incorrect login or password!");
                 return View(model);
@@ -66,11 +61,11 @@ namespace GuestsBook.Controllers
         // POST: AccountController/Regist
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Regist(RegistMDL model)
+        public async Task<IActionResult> Regist(RegistMDL model)
         {
             if (!ModelState.IsValid)
                 return View(model);
-            if (_context.Users.Any(x => x.Login == model.Login))
+            if (await _repository.IsLoginExists(model.Login))
             {
                 ModelState.AddModelError("", "This login is taken!");
                 return View(model);
@@ -82,28 +77,10 @@ namespace GuestsBook.Controllers
                 LastName = model.LastName,
                 Login = model.Login
             };
+            user = await _repository.CreateAndHashPassword(user, model);
 
-            byte[] saltbuf = new byte[16];
+            await _repository.AddUserToDb(user);
 
-            RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
-            randomNumberGenerator.GetBytes(saltbuf);
-
-            StringBuilder sb = new(16);
-            for (int i = 0; i < 16; i++)
-                sb.Append(string.Format("{0:X2}", saltbuf[i]));
-
-            string salt = sb.ToString();
-            byte[] password = Encoding.Unicode.GetBytes(salt + model.Password);
-            byte[] hashPassword = SHA256.HashData(password);
-
-            StringBuilder hash = new(hashPassword.Length);
-            for (int i = 0; i < hashPassword.Length; i++)
-                hash.Append(string.Format("{0:X2}", hashPassword[i]));
-
-            user.Password = hash.ToString();
-            user.Salt = salt;
-            _context.Users.Add(user);
-            _context.SaveChanges();
             return RedirectToAction("Login");
         }
     }

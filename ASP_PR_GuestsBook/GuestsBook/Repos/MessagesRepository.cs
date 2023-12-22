@@ -4,15 +4,11 @@ using NuGet.Protocol.Core.Types;
 
 namespace GuestsBook.Repos
 {
-    public class MyRepository : IMyRepository
+    public class MessagesRepository : IMessagesRepository
     {
         private readonly MyDbContext _context;
 
-        public MyRepository(MyDbContext context) => _context = context;
-       
-
-
-
+        public MessagesRepository(MyDbContext context) => _context = context;
 
         public async Task<List<Message>> GetAllMessages()
         {
@@ -38,7 +34,9 @@ namespace GuestsBook.Repos
         public async Task SaveChanges() => await _context.SaveChangesAsync();
 
         public void UpdateMessage(Message msg) => _context.Update(msg); 
-        public async Task CreateMessage(Message msg) => await _context.AddAsync(msg);        
+
+        public async Task CreateMessage(Message msg) => await _context.AddAsync(msg);   
+        
         public async Task DeleteMessage(int id)
         {
             var message = await GetMessage(id);

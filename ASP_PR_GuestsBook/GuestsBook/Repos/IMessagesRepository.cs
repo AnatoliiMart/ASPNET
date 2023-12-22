@@ -2,7 +2,7 @@
 
 namespace GuestsBook.Repos
 {
-    public interface IMyRepository
+    public interface IMessagesRepository
     {
         Task<List<Message>> GetAllMessages();
 

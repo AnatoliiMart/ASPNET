@@ -8,13 +8,8 @@ namespace GuestsBook.Controllers
 {
     public class MessagesController : Controller
     {
-
-
-        private readonly IMyRepository _repository;
-        public MessagesController(IMyRepository repository)
-        {
-            _repository = repository;
-        }
+        private readonly IMessagesRepository _repository;
+        public MessagesController(IMessagesRepository repository) => _repository = repository;
 
         // GET: Messages
         public async Task<IActionResult> Index() => View(await _repository.GetAllMessages());

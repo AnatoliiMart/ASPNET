@@ -19,7 +19,10 @@ namespace GuestsBook
 
             // добавляем контекст ApplicationContext в качестве сервиса в приложение
             builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(connection));
-            builder.Services.AddScoped<IMyRepository, MyRepository>();
+
+            builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
+            builder.Services.AddScoped<IAccountsRepository, AccountsRepository>();
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
