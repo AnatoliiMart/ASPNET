@@ -14,5 +14,7 @@ namespace MyMusicPortal.Models
         public string? Name { get; set; }
 
         public virtual ICollection<Song>? Songs { get; set; }
+
+        public Genre() => Songs = new List<Song>();
     }
 }
