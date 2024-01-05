@@ -11,14 +11,17 @@ namespace MyMusicPortal.Models
         [Key]
         public int Id { get; set; }
         
+        [NotNull]
+        public string? Path { get; set; }
+        [NotNull]
+        public string? Name { get; set; }
+
         [DisplayName("User")]
         public int UserId { get; set; }
 
         [DisplayName("Genre")]
         public int GenreId { get; set; }
 
-        [NotNull]
-        public string? Path { get; set; }
 
         [ForeignKey("UserId")]
         public virtual User? User { get; set;}

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using MyMusicPortal.Models.ViewModels;
+using MyMusicPortal.Models;
 using MyMusicPortal.Reposes;
 
 namespace MyMusicPortal

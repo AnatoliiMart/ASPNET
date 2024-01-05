@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace MyMusicPortal.Models.ViewModels
+namespace MyMusicPortal.Models
 {
     public class MyDbContext : DbContext
     {
@@ -11,5 +11,6 @@ namespace MyMusicPortal.Models.ViewModels
         public DbSet<Song> Songs { get; set; }
 
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<UserToConfirm> UsersToConfirm { get; set; }
     }
 }
