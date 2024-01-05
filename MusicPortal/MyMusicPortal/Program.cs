@@ -10,23 +10,27 @@ namespace MyMusicPortal
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession();
+
             string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(connection));
 
-            builder.Services.AddControllersWithViews();
-
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSession();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -35,7 +39,7 @@ namespace MyMusicPortal
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

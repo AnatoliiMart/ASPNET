@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyMusicPortal.Models;
+using MyMusicPortal.Models.ViewModels;
 using MyMusicPortal.Reposes;
 using NuGet.Protocol.Core.Types;
 
@@ -21,73 +23,63 @@ namespace MyMusicPortal.Controllers
             return View();
         }
 
-        // GET: AccountController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: AccountController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AccountController/Create
+        // POST: AccountController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Login(LoginVM model)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            if ((await _repository.GetAllUsers()).Count == 0)
+                return RedirectToAction("Regist", "Account");
+            if (!ModelState.IsValid)
+                return View(model);
 
-        // GET: AccountController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+            IQueryable<User> users = _repository.GetUsersByLogin(model.Login);
 
-        // POST: AccountController/Edit/5
+            if (!users.Any())
+            {
+                ModelState.AddModelError("", "Incorrect login or password!");
+                return View(model);
+            }
+
+            User user = users.First();
+
+            if (await _repository.IsPasswordCorrect(user, model.Password))
+            {
+                ModelState.AddModelError("", "Incorrect login or password!");
+                return View(model);
+            }
+            HttpContext.Session.SetString("FirstName", user.Name ?? string.Empty);
+            HttpContext.Session.SetString("LastName", user.Surname ?? string.Empty);
+            HttpContext.Session.SetString("Login", user.Login);
+            return RedirectToAction("Index", "Home");
+        }
+        // GET: AccountController/Regist
+        public ActionResult Regist() => View();
+
+        // POST: AccountController/Regist
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Regist(RegistVM model)
         {
-            try
+            if (!ModelState.IsValid)
+                return View(model);
+            if (await _repository.IsLoginExists(model.Login))
             {
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("", "This login is taken!");
+                return View(model);
             }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: AccountController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            UserToConfirm user = new()
+            {
+                Name = model.Name,
+                Surname = model.Surname,
+                Login = model.Login
+            };
+            user = await _repository.CreateAndHashPassword(user, model.Password);
 
-        // POST: AccountController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _repository.AddUserOnConfirm(user);
+
+            return RedirectToAction("Login");
         }
     }
 }

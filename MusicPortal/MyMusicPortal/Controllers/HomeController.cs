@@ -16,7 +16,16 @@ namespace MyMusicPortal.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (HttpContext.Session.GetString("LastName") != null
+                  && HttpContext.Session.GetString("FirstName") != null)
+                return View();
+            else
+                return RedirectToAction("Login", "Account");
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Account");
         }
     }
 }
