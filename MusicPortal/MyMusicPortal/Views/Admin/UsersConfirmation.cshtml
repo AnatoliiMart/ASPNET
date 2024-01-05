@@ -1,0 +1,56 @@
+﻿@model IEnumerable<MyMusicPortal.Models.UserToConfirm>
+
+@{
+    ViewData["Title"] = "UsersConfirmation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>UsersConfirmation</h1>
+
+<p>
+    <a asp-action="Create">Create New User</a>
+</p>
+@if(Model.Count() == 0)
+{
+    <h1>No users for confirmation</h1>
+}
+else
+{
+    <table class="table justify-content-evenly">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Surname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Login)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) 
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Surname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Login)
+                    </td>
+                    <td>
+                        <a asp-action="ConfirmUser" asp-route-id="@item.Id" class="btn btn-success">Confirm</a>
+                        <a asp-action="DeclineUser" asp-route-id="@item.Id" class="btn btn-danger">Decline</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}

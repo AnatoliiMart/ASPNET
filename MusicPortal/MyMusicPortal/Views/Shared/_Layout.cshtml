@@ -24,8 +24,12 @@
                     {
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Messages" asp-action="MyMessages">My messages</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Songs" asp-action="MyMessages">My messages</a>
                             </li>
+                            @if (@Context.Session.GetString("Login") == "admin")
+                            {
+                                <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="UsersConfirmation">Users to confirm</a>
+                            }
                         </ul>
                         <a class="navbar-brand"
                            asp-area=""

@@ -1,12 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyMusicPortal.Models;
-using MyMusicPortal.Models.ViewModels;
+﻿using MyMusicPortal.Models;
 
 namespace MyMusicPortal.Reposes
 {
     public interface IAccountRepository
     {
         Task<List<User>> GetAllUsers();
+
+        Task<List<UserToConfirm>> GetAllUsersToConfirm();
+
+        Task<UserToConfirm?> GetUserToConfirmById(int id);
 
         IQueryable<User> GetUsersByLogin(string? login);
 
@@ -17,6 +19,9 @@ namespace MyMusicPortal.Reposes
         Task<bool> IsLoginExists(string? login);
 
         Task AddUserOnConfirm(UserToConfirm user);
+
+        Task RemoveUserFromConfirmationList(UserToConfirm usr);
+
         Task AddConfirmedUser(User user);
     }
 }

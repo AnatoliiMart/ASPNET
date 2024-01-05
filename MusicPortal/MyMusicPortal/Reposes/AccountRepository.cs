@@ -12,6 +12,12 @@ namespace MyMusicPortal.Reposes
         public AccountRepository(MyDbContext context) => _context = context;
 
         public async Task<List<User>> GetAllUsers() => await _context.Users.ToListAsync();
+
+        public async Task<UserToConfirm?> GetUserToConfirmById(int id) =>
+            await _context.UsersToConfirm.FirstOrDefaultAsync(x => x.Id == id);
+
+        public async Task<List<UserToConfirm>> GetAllUsersToConfirm() => await _context.UsersToConfirm.ToListAsync();
+
         public IQueryable<User> GetUsersByLogin(string? login) => _context.Users.Where(x => x.Login == login);
 
         public async Task<UserToConfirm> CreateAndHashPassword(UserToConfirm user, string? passwordToHash) =>
@@ -55,11 +61,17 @@ namespace MyMusicPortal.Reposes
             });
 
         public async Task<bool> IsLoginExists(string? login) =>
-            await _context.Users.AnyAsync(x => x.Login == login);
+            await _context.Users.AnyAsync(x => x.Login == login) || await _context.UsersToConfirm.AnyAsync(x=> x.Login == login);
 
         public async Task AddUserOnConfirm(UserToConfirm user)
         {
             await _context.UsersToConfirm.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveUserFromConfirmationList(UserToConfirm usr)
+        {
+            _context.UsersToConfirm.Remove(usr);
             await _context.SaveChangesAsync();
         }
 

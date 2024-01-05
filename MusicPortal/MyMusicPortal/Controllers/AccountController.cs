@@ -1,20 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyMusicPortal.Models;
 using MyMusicPortal.Models.ViewModels;
 using MyMusicPortal.Reposes;
-using NuGet.Protocol.Core.Types;
 
 namespace MyMusicPortal.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IAccountRepository _repository;
-        public AccountController(IAccountRepository repository)
-        {
-            _repository = repository;
-        }
-        // GET: AccountController
+        public AccountController(IAccountRepository repository) => _repository = repository;
+
+        // GET: AccountController/Login
         public async Task<IActionResult> Login()
         {
             if ((await _repository.GetAllUsers()).Count == 0)
@@ -53,6 +49,7 @@ namespace MyMusicPortal.Controllers
             HttpContext.Session.SetString("Login", user.Login);
             return RedirectToAction("Index", "Home");
         }
+
         // GET: AccountController/Regist
         public ActionResult Regist() => View();
 

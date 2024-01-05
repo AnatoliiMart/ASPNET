@@ -19,7 +19,7 @@ namespace MyMusicPortal.Models
         {
             if (Database.EnsureCreated())
             {
-                User user = new User() {
+                User user = new() {
                     Name = "Admin",
                     Surname = "Admin",
                     Login = "admin"
