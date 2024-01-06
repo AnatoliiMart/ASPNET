@@ -1,6 +1,6 @@
 ﻿using MyMusicPortal.Models;
 
-namespace MyMusicPortal.Reposes
+namespace MyMusicPortal.Reposes.Account
 {
     public interface IAccountRepository
     {
@@ -15,6 +15,8 @@ namespace MyMusicPortal.Reposes
         Task<bool> IsPasswordCorrect(User user, string? passwordToCompare);
 
         Task<UserToConfirm> CreateAndHashPassword(UserToConfirm user, string? passwordToHash);
+
+        Task<User> CreateAndHashPassword(User user, string? passwordToHash);
 
         Task<bool> IsLoginExists(string? login);
 

@@ -26,9 +26,14 @@
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Songs" asp-action="MyMessages">My messages</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Genres" asp-action="Index">Genres</a>
+                            </li>
                             @if (@Context.Session.GetString("Login") == "admin")
                             {
-                                <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="UsersConfirmation">Users to confirm</a>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="UsersConfirmation">Users to confirm</a>
+                                </li>
                             }
                         </ul>
                         <a class="navbar-brand"

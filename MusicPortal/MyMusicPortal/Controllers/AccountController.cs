@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyMusicPortal.Models;
 using MyMusicPortal.Models.ViewModels;
-using MyMusicPortal.Reposes;
+using MyMusicPortal.Reposes.Account;
 
 namespace MyMusicPortal.Controllers
 {

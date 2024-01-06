@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyMusicPortal.Models;
-using MyMusicPortal.Reposes;
+using MyMusicPortal.Reposes.Account;
+using MyMusicPortal.Reposes.Genres;
 
 namespace MyMusicPortal
 {
@@ -18,6 +19,7 @@ namespace MyMusicPortal
             builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(connection));
 
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IGenresRepository, GenresRepository>();
 
             builder.Services.AddControllersWithViews();
 

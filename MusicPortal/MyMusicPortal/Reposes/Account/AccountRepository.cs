@@ -3,7 +3,7 @@ using MyMusicPortal.Models;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MyMusicPortal.Reposes
+namespace MyMusicPortal.Reposes.Account
 {
     public class AccountRepository : IAccountRepository
     {
@@ -46,6 +46,32 @@ namespace MyMusicPortal.Reposes
                 return user;
             });
 
+        public async Task<User> CreateAndHashPassword(User user, string? passwordToHash) =>
+           await Task.Run(() =>
+           {
+               byte[] saltbuf = new byte[16];
+
+               RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
+               randomNumberGenerator.GetBytes(saltbuf);
+
+               StringBuilder sb = new(16);
+               for (int i = 0; i < 16; i++)
+                   sb.Append(string.Format("{0:X2}", saltbuf[i]));
+
+               string salt = sb.ToString();
+               byte[] password = Encoding.Unicode.GetBytes(salt + passwordToHash);
+               byte[] hashPassword = SHA256.HashData(password);
+
+               StringBuilder hash = new(hashPassword.Length);
+               for (int i = 0; i < hashPassword.Length; i++)
+                   hash.Append(string.Format("{0:X2}", hashPassword[i]));
+
+               user.Password = hash.ToString();
+               user.Salt = salt;
+
+               return user;
+           });
+
         public async Task<bool> IsPasswordCorrect(User user, string? passwordToCompare) =>
             await Task.Run(() =>
             {
@@ -61,7 +87,7 @@ namespace MyMusicPortal.Reposes
             });
 
         public async Task<bool> IsLoginExists(string? login) =>
-            await _context.Users.AnyAsync(x => x.Login == login) || await _context.UsersToConfirm.AnyAsync(x=> x.Login == login);
+            await _context.Users.AnyAsync(x => x.Login == login) || await _context.UsersToConfirm.AnyAsync(x => x.Login == login);
 
         public async Task AddUserOnConfirm(UserToConfirm user)
         {

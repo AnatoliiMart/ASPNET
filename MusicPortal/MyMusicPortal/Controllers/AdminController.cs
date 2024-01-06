@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyMusicPortal.Models;
-using MyMusicPortal.Reposes;
+using MyMusicPortal.Models.ViewModels;
+using MyMusicPortal.Reposes.Account;
 
 namespace MyMusicPortal.Controllers
 {
@@ -15,6 +16,8 @@ namespace MyMusicPortal.Controllers
         public async Task<IActionResult> UsersConfirmation() =>
             View(await _repository.GetAllUsersToConfirm());
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmUser(int id)
         {
             UserToConfirm? confirm = await _repository.GetUserToConfirmById(id);
@@ -35,7 +38,10 @@ namespace MyMusicPortal.Controllers
             await _repository.RemoveUserFromConfirmationList(confirm);
             return RedirectToAction("Index", "Home");
         }
-        // GET: AdminController/Details/5
+
+        // GET: AdminController/DeclineUser/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeclineUser(int id)
         {
             UserToConfirm? confirm = await _repository.GetUserToConfirmById(id);
@@ -47,67 +53,32 @@ namespace MyMusicPortal.Controllers
             await _repository.RemoveUserFromConfirmationList(confirm);
             return RedirectToAction("Index", "Home");
         }
-        // GET: AdminController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        [HttpGet]
+        public ActionResult CreateUser() => View();
 
-        // POST: AdminController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> CreateUser(RegistVM model)
         {
-            try
+            if (!ModelState.IsValid)
+                return View(model);
+            if (await _repository.IsLoginExists(model.Login))
             {
-                return RedirectToAction(nameof(UsersConfirmation));
+                ModelState.AddModelError("", "This login is taken!");
+                return View(model);
             }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+            User user = new()
+            {
+                Name = model.Name,
+                Surname = model.Surname,
+                Login = model.Login
+            };
+            user = await _repository.CreateAndHashPassword(user, model.Password);
 
-        // POST: AdminController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(UsersConfirmation));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            await _repository.AddConfirmedUser(user);
 
-        // GET: AdminController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(UsersConfirmation));
-            }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(UsersConfirmation));
         }
     }
 }
