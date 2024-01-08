@@ -1,0 +1,59 @@
+﻿@model IEnumerable<MyMusicPortal.Models.Song>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (TempData["SM"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SM"]
+    </div>
+}
+<h1>Songs</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-info">Add song</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+                <audio controls src="@item.Path"></audio>
+                <a href="@item.Path" class="btn btn-success">Download Song</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Login)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre.Name)
+            </td>
+            <td>
+                @if (@Context.Session.GetString("Login") == "admin")
+                {
+                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                }
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">Details</a>
+               
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

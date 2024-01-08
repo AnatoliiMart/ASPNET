@@ -11,8 +11,9 @@ namespace MyMusicPortal.Models
         [Key]
         public int Id { get; set; }
         
-        [NotNull]
         public string? Path { get; set; }
+
+        [DisplayName("Song Title")]
         [NotNull]
         public string? Name { get; set; }
 

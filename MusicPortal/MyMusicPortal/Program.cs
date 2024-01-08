@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MyMusicPortal.Models;
 using MyMusicPortal.Reposes.Account;
 using MyMusicPortal.Reposes.Genres;
+using MyMusicPortal.Reposes.Songs;
 
 namespace MyMusicPortal
 {
@@ -20,6 +21,7 @@ namespace MyMusicPortal
 
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<IGenresRepository, GenresRepository>();
+            builder.Services.AddScoped<ISongsRepository, SongsRepository>();
 
             builder.Services.AddControllersWithViews();
 
@@ -33,6 +35,7 @@ namespace MyMusicPortal
             app.UseHttpsRedirection();
 
             app.UseSession();
+
             app.UseStaticFiles();
 
             app.UseRouting();
