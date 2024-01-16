@@ -20,7 +20,7 @@ namespace HearMe.DAL.Entities
 
         public string? PreviewPath { get; set; }
 
-        public int Rating { get; set; }
+        public int Rating { get; set; } = 0;
 
         public int? UserId { get; set; }
 

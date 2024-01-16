@@ -1,7 +1,12 @@
-﻿namespace HearMe.DAL.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace HearMe.DAL.Entities
 {
+    [Table("tblUsers")]
     public class User
     {
+        [Key]
         public int Id { get; set; }
 
         public string? FirstName { get; set; }
@@ -16,7 +21,7 @@
 
         public string? Salt { get; set; }
 
-        public bool IsAdmin { get; set; }
+        public bool IsAdmin { get; set; } = false;
 
         public virtual ICollection<Song> Songs { get; set; }
 
