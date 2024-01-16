@@ -45,8 +45,8 @@ else
                         @Html.DisplayFor(modelItem => item.Login)
                     </td>
                     <td>
-                        <a asp-action="ConfirmUser" asp-route-id="@item.Id" class="btn btn-success">Confirm</a>
-                        <a asp-action="DeclineUser" asp-route-id="@item.Id" class="btn btn-danger">Decline</a>
+                        <a asp-action="ConfirmUser" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-success">Confirm</a>
+                        <a asp-action="DeclineUser" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-danger">Decline</a>
                     </td>
                 </tr>
             }

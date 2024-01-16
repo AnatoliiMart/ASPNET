@@ -16,8 +16,6 @@ namespace MyMusicPortal.Controllers
         public async Task<IActionResult> UsersConfirmation() =>
             View(await _repository.GetAllUsersToConfirm());
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmUser(int id)
         {
             UserToConfirm? confirm = await _repository.GetUserToConfirmById(id);
@@ -39,9 +37,6 @@ namespace MyMusicPortal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // GET: AdminController/DeclineUser/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeclineUser(int id)
         {
             UserToConfirm? confirm = await _repository.GetUserToConfirmById(id);
@@ -53,6 +48,7 @@ namespace MyMusicPortal.Controllers
             await _repository.RemoveUserFromConfirmationList(confirm);
             return RedirectToAction("Index", "Home");
         }
+
         [HttpGet]
         public ActionResult CreateUser() => View();
 
