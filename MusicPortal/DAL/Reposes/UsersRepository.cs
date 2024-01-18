@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.EF;
+﻿using DAL.EF;
 using HearMe.DAL.Entities;
 using HearMe.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace HearMe.DAL.Reposes
 {
@@ -15,34 +11,24 @@ namespace HearMe.DAL.Reposes
 
       public UsersRepository(MyDbContext context) => _context = context;
 
-      public Task Create(User item)
+      public async Task Create(User item) =>
+         await _context.Users.AddAsync(item);
+
+      public async Task Delete(int id)
       {
-         throw new NotImplementedException();
+         User? usr = await _context.Users.FindAsync(id);
+         if (usr != null)
+            _context.Users.Remove(usr);
       }
 
-      public Task Delete(int id)
-      {
-         throw new NotImplementedException();
-      }
+      public async Task<User?> Get(int id) => await _context.Users.FindAsync(id);
 
-      public Task<User> Get(int id)
-      {
-         throw new NotImplementedException();
-      }
+      // has been searched by LOGIN!!! 
+      public async Task<User?> Get(string name) =>
+         await _context.Users.Where(usr => usr.Login == name).FirstOrDefaultAsync();
 
-      public Task<User> Get(string name)
-      {
-         throw new NotImplementedException();
-      }
+      public async Task<IEnumerable<User>> GetAll() => await _context.Users.ToListAsync();
 
-      public Task<IEnumerable<User>> GetAll()
-      {
-         throw new NotImplementedException();
-      }
-
-      public void Update(User item)
-      {
-         throw new NotImplementedException();
-      }
+      public void Update(User item) => _context.Users.Entry(item).State = EntityState.Modified;
    }
 }

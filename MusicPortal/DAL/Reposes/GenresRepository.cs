@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.EF;
 using HearMe.DAL.Entities;
 using HearMe.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace HearMe.DAL.Reposes
 {
@@ -15,34 +18,22 @@ namespace HearMe.DAL.Reposes
 
       public GenresRepository(MyDbContext context) => _context = context;
 
-      public Task Create(Genre item)
+      public async Task Create(Genre item) => await _context.Genres.AddAsync(item);
+
+      public async Task Delete(int id)
       {
-         throw new NotImplementedException();
+         Genre? genre = await _context.Genres.FindAsync(id);
+         if (genre != null)
+            _context.Genres.Remove(genre);
       }
 
-      public Task Delete(int id)
-      {
-         throw new NotImplementedException();
-      }
+      public async Task<Genre?> Get(int id) => await _context.Genres.FindAsync(id);
 
-      public Task<Genre> Get(int id)
-      {
-         throw new NotImplementedException();
-      }
+      public async Task<Genre?> Get(string name) =>
+         await _context.Genres.Where(gen => gen.Name == name).FirstOrDefaultAsync();
 
-      public Task<Genre> Get(string name)
-      {
-         throw new NotImplementedException();
-      }
+      public async Task<IEnumerable<Genre>> GetAll() => await _context.Genres.ToListAsync();
 
-      public Task<IEnumerable<Genre>> GetAll()
-      {
-         throw new NotImplementedException();
-      }
-
-      public void Update(Genre item)
-      {
-         throw new NotImplementedException();
-      }
+      public void Update(Genre item) => _context.Genres.Entry(item).State = EntityState.Modified;
    }
 }

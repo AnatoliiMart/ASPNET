@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.EF;
+﻿using DAL.EF;
 using HearMe.DAL.Entities;
 using HearMe.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace HearMe.DAL.Reposes
 {
@@ -14,34 +10,24 @@ namespace HearMe.DAL.Reposes
       private readonly MyDbContext _context;
 
       public UsersToConfirmRepository(MyDbContext context) => _context = context;
-      public Task Create(UsersToConfirm item)
+      public async Task Create(UsersToConfirm item) => await _context.UsersToConfirm.AddAsync(item);
+
+      public async Task Delete(int id)
       {
-         throw new NotImplementedException();
+         UsersToConfirm? usr = await _context.UsersToConfirm.FindAsync(id);
+         if (usr != null)
+            _context.UsersToConfirm.Remove(usr);
       }
 
-      public Task Delete(int id)
-      {
-         throw new NotImplementedException();
-      }
+      public async Task<UsersToConfirm?> Get(int id) =>
+         await _context.UsersToConfirm.FindAsync(id);
 
-      public Task<UsersToConfirm> Get(int id)
-      {
-         throw new NotImplementedException();
-      }
+      // has been searched by LOGIN!!! 
+      public async Task<UsersToConfirm?> Get(string name) =>
+         await _context.UsersToConfirm.Where(usr => usr.Login == name).FirstOrDefaultAsync();
 
-      public Task<UsersToConfirm> Get(string name)
-      {
-         throw new NotImplementedException();
-      }
+      public async Task<IEnumerable<UsersToConfirm>> GetAll() => await _context.UsersToConfirm.ToListAsync();
 
-      public Task<IEnumerable<UsersToConfirm>> GetAll()
-      {
-         throw new NotImplementedException();
-      }
-
-      public void Update(UsersToConfirm item)
-      {
-         throw new NotImplementedException();
-      }
+      public void Update(UsersToConfirm item) => _context.UsersToConfirm.Entry(item).State = EntityState.Modified;
    }
 }

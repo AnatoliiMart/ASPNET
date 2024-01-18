@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.EF;
+﻿using DAL.EF;
 using HearMe.DAL.Entities;
 using HearMe.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace HearMe.DAL.Reposes
 {
@@ -15,34 +11,26 @@ namespace HearMe.DAL.Reposes
 
       public SongsRepository(MyDbContext context) => _context = context;
 
-      public Task Create(Song item)
+      public async Task Create(Song item) => await _context.Songs.AddAsync(item);
+
+      public async Task Delete(int id)
       {
-         throw new NotImplementedException();
+         Song? song = await _context.Songs.FindAsync(id);
+         if (song != null)
+            _context.Songs.Remove(song);
       }
 
-      public Task Delete(int id)
-      {
-         throw new NotImplementedException();
-      }
+      public async Task<Song?> Get(int id) =>
+         await _context.Songs.Include(s => s.Genre).Include(s => s.User)
+               .Where(s => s.Id == id).FirstOrDefaultAsync();
 
-      public Task<Song> Get(int id)
-      {
-         throw new NotImplementedException();
-      }
+      public async Task<Song?> Get(string name) =>
+         await _context.Songs.Include(s => s.Genre).Include(s => s.User)
+               .Where(s => s.Name == name).FirstOrDefaultAsync();
 
-      public Task<Song> Get(string name)
-      {
-         throw new NotImplementedException();
-      }
+      public async Task<IEnumerable<Song>> GetAll() =>
+         await _context.Songs.Include(s => s.Genre).Include(s => s.User).ToListAsync();
 
-      public Task<IEnumerable<Song>> GetAll()
-      {
-         throw new NotImplementedException();
-      }
-
-      public void Update(Song item)
-      {
-         throw new NotImplementedException();
-      }
+      public void Update(Song item) => _context.Songs.Entry(item).State = EntityState.Modified;
    }
 }
