@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace HearMe.DAL.Entities
 {
    [Table("tblUsersToConfirm")]
-   public class UsersToConfirm
+   public class UserToConfirm
    {
       [Key]
       public int Id { get; set; }

@@ -1,8 +1,80 @@
-﻿using HearMe.BLL.Interfaces;
+﻿using AutoMapper;
+using HearMe.BLL.DTM;
+using HearMe.BLL.Infrasrtructure;
+using HearMe.BLL.Interfaces;
+using HearMe.DAL.Entities;
+using HearMe.DAL.Interfaces;
 
 namespace HearMe.BLL.Services
 {
    public class SongService : ISongService
    {
+      IUnitOfWork DataBase { get; set; }
+
+      public SongService(IUnitOfWork unit) => DataBase = unit;
+
+      public async Task CreateSong(SongDTM song)
+      {
+         var sng = new Song
+         {
+            Id = song.Id,
+            Name = song.Name,
+            SongPath = song.SongPath,
+            PreviewPath = song.PreviewPath,
+            Rating = song.Rating,
+            UserId = song.UserId,
+            GenreId = song.GenreId
+         };
+         await DataBase.Songs.Create(sng);
+         await DataBase.Save();
+      }
+
+      public async Task DeleteSong(int id)
+      {
+         await DataBase.Songs.Delete(id);
+         await DataBase.Save();
+      }
+
+      public async Task<SongDTM> GetSong(int id)
+      {
+         var sng = await DataBase.Songs.Get(id);
+         return sng == null
+                ? throw new ValidationException("This Song does not found in our base of Songs", "")
+                : new SongDTM
+                {
+                   Id = sng.Id,
+                   Name = sng.Name,
+                   SongPath = sng.SongPath,
+                   PreviewPath = sng.PreviewPath,
+                   Rating = sng.Rating,
+                   UserId = sng.UserId,
+                   GenreId = sng.GenreId
+                };
+      }
+
+      public async Task<IEnumerable<SongDTM>> GetSongsList()
+      {
+         var config = new MapperConfiguration(cfg => cfg.CreateMap<Song, SongDTM>()
+                          .ForMember("GenreName", opt => opt.MapFrom(s => s.Genre.Name ?? "NoGenre"))
+                          .ForMember("UserLogin", opt => opt.MapFrom(s => s.User.Login ?? "NoUserLogin")));
+         var mapper = new Mapper(config);
+         return mapper.Map<IEnumerable<Song>, IEnumerable<SongDTM>>(await DataBase.Songs.GetAll());
+      }
+
+      public async Task UpdateSong(SongDTM song)
+      {
+         var sng = new Song
+         {
+            Id = song.Id,
+            Name = song.Name,
+            SongPath = song.SongPath,
+            PreviewPath = song.PreviewPath,
+            Rating = song.Rating,
+            UserId = song.UserId,
+            GenreId = song.GenreId
+         };
+         DataBase.Songs.Update(sng);
+         await DataBase.Save();
+      }
    }
 }

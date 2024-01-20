@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HearMe.BLL.DTM;
 
 namespace HearMe.BLL.Interfaces
 {
    public interface IGenreService
    {
+      Task<IEnumerable<GenreDTM>> GetGenresList();
+      Task<GenreDTM> GetGenre(int id);
+      Task DeleteGenre(int id);
+      Task UpdateGenre(GenreDTM genre);
+      Task CreateGenre(GenreDTM genre);
    }
 }

@@ -13,7 +13,7 @@ namespace DAL.EF
 
       public DbSet<Song> Songs { get; set; }
 
-        public DbSet<UsersToConfirm> UsersToConfirm { get; set; }
+        public DbSet<UserToConfirm> UsersToConfirm { get; set; }
 
         public MyDbContext(DbContextOptions options) : base(options)
       {

@@ -7,11 +7,11 @@ using HearMe.BLL.DTM;
 
 namespace HearMe.BLL.Interfaces
 {
-   public interface IUserToConfirmService
+   public interface IUserToConfirmService: IPasswordCreation
    {
       Task CreateUserToConfirm(UserDTM user);
       Task DeleteUserToConfirm(int id);
       Task<UserDTM> GetUserToConfirm(int id);
-      Task<IEnumerable<UserDTM>> GetAllUsersToConfirm();
+      Task<IEnumerable<UserDTM>> GetUsersToConfirmList();
    }
 }

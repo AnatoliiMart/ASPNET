@@ -17,7 +17,7 @@ namespace HearMe.BLL.Services
 
       public async Task CreateUserToConfirm(UserDTM user)
       {
-         var usr = new UsersToConfirm
+         var usr = new UserToConfirm
          {
             Id = user.Id,
             FirstName = user.FirstName,
@@ -31,30 +31,33 @@ namespace HearMe.BLL.Services
          await DataBase.Save();
       }
 
-      public async Task DeleteUserToConfirm(int id) =>
-         await DataBase.UsersToConfirm.Delete(id);
-
-      public async Task<IEnumerable<UserDTM>> GetAllUsersToConfirm()
+      public async Task DeleteUserToConfirm(int id)
       {
-         var mapper = new MapperConfiguration(cfg => cfg.CreateMap<UsersToConfirm, UserDTM>()).CreateMapper();
-         return mapper.Map<IEnumerable<UsersToConfirm>, IEnumerable<UserDTM>>(await DataBase.UsersToConfirm.GetAll());
+         await DataBase.UsersToConfirm.Delete(id);
+         await DataBase.Save();
+      }
+
+      public async Task<IEnumerable<UserDTM>> GetUsersToConfirmList()
+      {
+         var mapper = new MapperConfiguration(cfg => cfg.CreateMap<UserToConfirm, UserDTM>()).CreateMapper();
+         return mapper.Map<IEnumerable<UserToConfirm>, IEnumerable<UserDTM>>(await DataBase.UsersToConfirm.GetAll());
       }
 
       public async Task<UserDTM> GetUserToConfirm(int id)
       {
-         UsersToConfirm? usr = await DataBase.UsersToConfirm.Get(id);
-         if (usr == null)
-            throw new ValidationException("This team does not exists", "");
-         return new UserDTM
-         {
-            Id = usr.Id,
-            FirstName = usr.FirstName,
-            LastName = usr.LastName,
-            AvatarPath = usr.AvatarPath,
-            Login = usr.Login,
-            Password = usr.Password,
-            Salt = usr.Salt,
-         };
+         UserToConfirm? usr = await DataBase.UsersToConfirm.Get(id);
+         return usr == null
+                ? throw new ValidationException("This User does not found in our base of Users to confirm", "")
+                : new UserDTM
+                {
+                   Id = usr.Id,
+                   FirstName = usr.FirstName,
+                   LastName = usr.LastName,
+                   AvatarPath = usr.AvatarPath,
+                   Login = usr.Login,
+                   Password = usr.Password,
+                   Salt = usr.Salt,
+                };
       }
 
       public async Task<UserDTM> CreatePassword(UserDTM item, string? passwordToHash) =>

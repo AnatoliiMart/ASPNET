@@ -50,7 +50,7 @@ namespace HearMe.DAL.Reposes
          }
       }
 
-      public IRepository<UsersToConfirm> UsersToConfirm
+      public IRepository<UserToConfirm> UsersToConfirm
       {
          get
          {

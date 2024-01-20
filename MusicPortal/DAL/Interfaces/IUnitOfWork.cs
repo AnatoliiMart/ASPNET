@@ -15,7 +15,7 @@ namespace HearMe.DAL.Interfaces
 
       IRepository<User> Users { get; }
 
-      IRepository<UsersToConfirm> UsersToConfirm { get; }
+      IRepository<UserToConfirm> UsersToConfirm { get; }
 
       Task Save();
    }
