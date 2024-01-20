@@ -1,12 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HearMe.DAL.Entities
+﻿namespace HearMe.BLL.DTM
 {
-   [Table("tblUsersToConfirm")]
-   public class UsersToConfirm
+   public class UserDTM
    {
-      [Key]
       public int Id { get; set; }
 
       public string? FirstName { get; set; }
@@ -20,5 +15,7 @@ namespace HearMe.DAL.Entities
       public string? Password { get; set; }
 
       public string? Salt { get; set; }
+
+      public bool IsAdmin { get; set; } = false;
    }
 }
