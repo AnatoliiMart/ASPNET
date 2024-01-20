@@ -1,41 +1,35 @@
 using HearMe.BLL.Infrasrtructure;
+using HearMe.BLL.Interfaces;
+using HearMe.BLL.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace HearMe
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+   public class Program
+   {
+      public static void Main(string[] args)
+      {
+         var builder = WebApplication.CreateBuilder(args);
 
-            string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
+         string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
+         builder.Services.AddMusicPortalContext(connection);
 
-            builder.Services.AddMusicPortalContext(connection);
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+         builder.Services.AddControllersWithViews();
+         builder.Services.AddUnitOfWorkService();
+         builder.Services.AddTransient<ISongService, SongService>();
+         builder.Services.AddTransient<IGenreService, GenreService>();
+         builder.Services.AddTransient<IUserService, UserService>();
+         builder.Services.AddTransient<IUserToConfirmService, UserToConfirmService>();
 
-            var app = builder.Build();
+         var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+         app.UseStaticFiles();
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+         app.MapControllerRoute(
+             name: "default",
+             pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            app.Run();
-        }
-    }
+         app.Run();
+      }
+   }
 }
