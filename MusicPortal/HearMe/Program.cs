@@ -20,6 +20,7 @@ namespace HearMe
          builder.Services.AddTransient<IModelService<SongDTM>, SongService>();
          builder.Services.AddTransient<IModelService<GenreDTM>, GenreService>();
          builder.Services.AddTransient<IModelService<UserDTM>, UserService>();
+         builder.Services.AddTransient<IPasswordService, PasswordService>();
          builder.Services.AddTransient<IUserToConfirmService, UserToConfirmService>();
 
          var app = builder.Build();
