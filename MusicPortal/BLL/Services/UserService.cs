@@ -9,13 +9,13 @@ using HearMe.DAL.Interfaces;
 
 namespace HearMe.BLL.Services
 {
-   public class UserService : IUserService
+   public class UserService : IModelService<UserDTM>, IPasswordCreation<User>
    {
-      IUnitOfWork DataBase { get; set; }
+      public IUnitOfWork DataBase { get; protected set; }
 
       public UserService(IUnitOfWork unit) => DataBase = unit;
 
-      public async Task CreateUser(UserDTM user)
+      public async Task CreateItem(UserDTM user)
       {
          var usr = new User
          {
@@ -31,20 +31,20 @@ namespace HearMe.BLL.Services
          await DataBase.Save();
       }
 
-      public async Task DeleteUser(int id)
+      public async Task DeleteItem(int id)
       {
          await DataBase.Users.Delete(id);
          await DataBase.Save();
       }
 
 
-      public async Task<IEnumerable<UserDTM>> GetUsersList()
+      public async Task<IEnumerable<UserDTM>> GetItemsList()
       {
          var mapper = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTM>()).CreateMapper();
          return mapper.Map<IEnumerable<User>, IEnumerable<UserDTM>>(await DataBase.Users.GetAll());
       }
 
-      public async Task<UserDTM> GetUser(int id)
+      public async Task<UserDTM> GetItem(int id)
       {
          User? usr = await DataBase.Users.Get(id);
          return usr == null
@@ -61,7 +61,7 @@ namespace HearMe.BLL.Services
                 };
       }
 
-      public async Task UpdateUser(UserDTM user)
+      public async Task UpdateItem(UserDTM user)
       {
          var usr = new User
          {
@@ -102,5 +102,19 @@ namespace HearMe.BLL.Services
 
             return item;
          });
+
+      public async Task<bool> IsPasswordCorrect(User user, string? passwordToCompare) =>
+          await Task.Run(() =>
+          {
+             string? salt = user.Salt;
+             byte[] password = Encoding.Unicode.GetBytes(salt + passwordToCompare);
+             byte[] hashPassword = SHA256.HashData(password);
+
+             StringBuilder hash = new(hashPassword.Length);
+             for (int i = 0; i < hashPassword.Length; i++)
+                hash.Append(string.Format("{0:X2}", hashPassword[i]));
+
+             return user.Password == hash.ToString();
+          });
    }
 }

@@ -7,13 +7,13 @@ using HearMe.DAL.Interfaces;
 
 namespace HearMe.BLL.Services
 {
-   public class SongService : ISongService
+   public class SongService : IModelService<SongDTM>
    {
-      IUnitOfWork DataBase { get; set; }
+      public IUnitOfWork DataBase { get; protected set; }
 
       public SongService(IUnitOfWork unit) => DataBase = unit;
 
-      public async Task CreateSong(SongDTM song)
+      public async Task CreateItem(SongDTM song)
       {
          var sng = new Song
          {
@@ -29,13 +29,13 @@ namespace HearMe.BLL.Services
          await DataBase.Save();
       }
 
-      public async Task DeleteSong(int id)
+      public async Task DeleteItem(int id)
       {
          await DataBase.Songs.Delete(id);
          await DataBase.Save();
       }
 
-      public async Task<SongDTM> GetSong(int id)
+      public async Task<SongDTM> GetItem(int id)
       {
          var sng = await DataBase.Songs.Get(id);
          return sng == null
@@ -52,7 +52,7 @@ namespace HearMe.BLL.Services
                 };
       }
 
-      public async Task<IEnumerable<SongDTM>> GetSongsList()
+      public async Task<IEnumerable<SongDTM>> GetItemsList()
       {
          var config = new MapperConfiguration(cfg => cfg.CreateMap<Song, SongDTM>()
                           .ForMember("GenreName", opt => opt.MapFrom(s => s.Genre.Name ?? "NoGenre"))
@@ -61,7 +61,7 @@ namespace HearMe.BLL.Services
          return mapper.Map<IEnumerable<Song>, IEnumerable<SongDTM>>(await DataBase.Songs.GetAll());
       }
 
-      public async Task UpdateSong(SongDTM song)
+      public async Task UpdateItem(SongDTM song)
       {
          var sng = new Song
          {

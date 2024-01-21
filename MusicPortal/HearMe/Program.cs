@@ -1,3 +1,4 @@
+using HearMe.BLL.DTM;
 using HearMe.BLL.Infrasrtructure;
 using HearMe.BLL.Interfaces;
 using HearMe.BLL.Services;
@@ -16,9 +17,9 @@ namespace HearMe
 
          builder.Services.AddControllersWithViews();
          builder.Services.AddUnitOfWorkService();
-         builder.Services.AddTransient<ISongService, SongService>();
-         builder.Services.AddTransient<IGenreService, GenreService>();
-         builder.Services.AddTransient<IUserService, UserService>();
+         builder.Services.AddTransient<IModelService<SongDTM>, SongService>();
+         builder.Services.AddTransient<IModelService<GenreDTM>, GenreService>();
+         builder.Services.AddTransient<IModelService<UserDTM>, UserService>();
          builder.Services.AddTransient<IUserToConfirmService, UserToConfirmService>();
 
          var app = builder.Build();

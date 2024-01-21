@@ -7,13 +7,13 @@ using HearMe.DAL.Interfaces;
 
 namespace HearMe.BLL.Services
 {
-   public class GenreService : IGenreService
+   public class GenreService : IModelService<GenreDTM>
    {
-      IUnitOfWork DataBase { get; set; }
+      public IUnitOfWork DataBase { get; protected set; }
 
       public GenreService(IUnitOfWork unit) => DataBase = unit;
 
-      public async Task CreateGenre(GenreDTM genre)
+      public async Task CreateItem(GenreDTM genre)
       {
          var gnr = new Genre
          {
@@ -24,13 +24,13 @@ namespace HearMe.BLL.Services
          await DataBase.Save();
       }
 
-      public async Task DeleteGenre(int id)
+      public async Task DeleteItem(int id)
       {
          await DataBase.Genres.Delete(id);
          await DataBase.Save();
       }
 
-      public async Task<GenreDTM> GetGenre(int id)
+      public async Task<GenreDTM> GetItem(int id)
       {
          var gnr = await DataBase.Genres.Get(id);
          return gnr == null
@@ -42,13 +42,13 @@ namespace HearMe.BLL.Services
                 };
       }
 
-      public async Task<IEnumerable<GenreDTM>> GetGenresList()
+      public async Task<IEnumerable<GenreDTM>> GetItemsList()
       {
          var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Genre, GenreDTM>()).CreateMapper();
          return mapper.Map<IEnumerable<Genre>, IEnumerable<GenreDTM>>(await DataBase.Genres.GetAll());
       }
 
-      public async Task UpdateGenre(GenreDTM genre)
+      public async Task UpdateItem(GenreDTM genre)
       {
          var gnr = new Genre
          {

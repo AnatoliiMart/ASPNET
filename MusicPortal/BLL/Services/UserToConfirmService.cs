@@ -9,9 +9,9 @@ using HearMe.DAL.Interfaces;
 
 namespace HearMe.BLL.Services
 {
-   public class UserToConfirmService : IUserToConfirmService, IPasswordCreation
+   public class UserToConfirmService : IUserToConfirmService, IPasswordCreation<UserToConfirm>
    {
-      IUnitOfWork DataBase { get; set; }
+      public IUnitOfWork DataBase { get; protected set; }
 
       public UserToConfirmService(IUnitOfWork unit) => DataBase = unit;
 
@@ -85,5 +85,20 @@ namespace HearMe.BLL.Services
 
             return item;
          });
+
+      public async Task<bool> IsPasswordCorrect(UserToConfirm user, string? passwordToCompare) =>
+          await Task.Run(() =>
+          {
+             string? salt = user.Salt;
+             byte[] password = Encoding.Unicode.GetBytes(salt + passwordToCompare);
+             byte[] hashPassword = SHA256.HashData(password);
+
+             StringBuilder hash = new(hashPassword.Length);
+             for (int i = 0; i < hashPassword.Length; i++)
+                hash.Append(string.Format("{0:X2}", hashPassword[i]));
+
+             return user.Password == hash.ToString();
+          });
+
    }
 }
