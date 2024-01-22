@@ -59,8 +59,6 @@ namespace HearMe.BLL.Services
                    LastName = usr.LastName,
                    AvatarPath = usr.AvatarPath,
                    Login = usr.Login,
-                   Password = usr.Password,
-                   Salt = usr.Salt,
                 };
       }
 
@@ -73,8 +71,6 @@ namespace HearMe.BLL.Services
             LastName = user.LastName,
             Login = user.Login,
             AvatarPath = user.AvatarPath,
-            Password = user.Password,
-            Salt = user.Salt
          };
          DataBase.Users.Update(usr);
          await DataBase.Save();

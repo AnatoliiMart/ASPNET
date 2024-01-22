@@ -57,8 +57,6 @@ namespace HearMe.BLL.Services
                    LastName = usr.LastName,
                    AvatarPath = usr.AvatarPath,
                    Login = usr.Login,
-                   Password = usr.Password,
-                   Salt = usr.Salt,
                 };
       }
    }
