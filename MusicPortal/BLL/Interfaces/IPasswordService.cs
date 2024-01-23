@@ -1,4 +1,5 @@
-﻿using HearMe.DAL.Entities;
+﻿using HearMe.BLL.DTM;
+using HearMe.DAL.Entities;
 
 namespace HearMe.BLL.Interfaces
 {
@@ -8,6 +9,6 @@ namespace HearMe.BLL.Interfaces
 
       Task<UserToConfirm> CreatePassword(UserToConfirm item, string? passwordToHash);
 
-      Task<bool> IsPasswordCorrect(User user, string? passwordToCompare);
+      Task<bool> IsPasswordCorrect(UserDTM user, string? passwordToCompare);
    }
 }

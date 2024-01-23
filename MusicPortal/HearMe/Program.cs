@@ -6,32 +6,45 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HearMe
 {
-   public class Program
-   {
-      public static void Main(string[] args)
-      {
-         var builder = WebApplication.CreateBuilder(args);
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-         string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
-         builder.Services.AddMusicPortalContext(connection);
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession();
 
-         builder.Services.AddControllersWithViews();
-         builder.Services.AddUnitOfWorkService();
-         builder.Services.AddTransient<IModelService<SongDTM>, SongService>();
-         builder.Services.AddTransient<IModelService<GenreDTM>, GenreService>();
-         builder.Services.AddTransient<IModelService<UserDTM>, UserService>();
-         builder.Services.AddTransient<IPasswordService, PasswordService>();
-         builder.Services.AddTransient<IUserToConfirmService, UserToConfirmService>();
+            string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddMusicPortalContext(connection);
 
-         var app = builder.Build();
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddUnitOfWorkService();
+            builder.Services.AddTransient<IModelService<SongDTM>, SongService>();
+            builder.Services.AddTransient<IModelService<GenreDTM>, GenreService>();
+            builder.Services.AddTransient<IModelService<UserDTM>, UserService>();
+            builder.Services.AddTransient<IPasswordService, PasswordService>();
+            builder.Services.AddTransient<IUserToConfirmService, UserToConfirmService>();
 
-         app.UseStaticFiles();
+            var app = builder.Build();
+            if (!app.Environment.IsDevelopment())
+                app.UseHsts();
 
-         app.MapControllerRoute(
-             name: "default",
-             pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.UseHttpsRedirection();
 
-         app.Run();
-      }
-   }
+            app.UseSession();
+
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Account}/{action=Login}");
+
+            app.Run();
+        }
+    }
 }
