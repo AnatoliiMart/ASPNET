@@ -67,7 +67,7 @@ namespace HearMe.Controllers
         // POST: AccountController/Regist
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Regist([Bind("FirstName, LastName, Login, Password")] RegistVM model, IFormFile fileUpload)
+        public async Task<IActionResult> Regist([Bind("FirstName, LastName, Login, Password, ConfirmPassword")] RegistVM model, IFormFile? fileUpload)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -99,13 +99,20 @@ namespace HearMe.Controllers
                     return View(model);
                 }
 
-                string path = "/img/UserAvatars" + fileUpload.FileName;
+                string path = "/img/" + fileUpload.FileName;
 
-                using (FileStream filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                using (FileStream filestream = new(_appEnvironment.WebRootPath + path, FileMode.Create))
                     await fileUpload.CopyToAsync(filestream);
                 user.AvatarPath = path;
             }
-            await _userToConfirmService.CreateUserToConfirm(user);
+            if (user.Login == "admin")
+            {
+                user.IsAdmin = true;
+                await _userService.CreateItem(user);
+            }
+            else
+                await _userToConfirmService.CreateUserToConfirm(user);
+
             TempData["SM"] = "Your account has been successfully created. Wait for administrator confirmation";
             return RedirectToAction(nameof(Login));
         }

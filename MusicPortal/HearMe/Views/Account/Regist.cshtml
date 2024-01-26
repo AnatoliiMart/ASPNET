@@ -4,13 +4,11 @@
     ViewData["Title"] = "Regist";
 }
 
-<h1>Regist</h1>
-
-<h4>RegistVM</h4>
+<h1>Registration</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Regist">
+        <form asp-action="Regist" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
@@ -29,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="AvatarPath" class="control-label"></label>
-                <input asp-for="AvatarPath" class="form-control" />
+                <input type="file" name="fileUpload" asp-for="AvatarPath" class="form-control" />
                 <span asp-validation-for="AvatarPath" class="text-danger"></span>
             </div>
             <div class="form-group">

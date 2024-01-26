@@ -15,4 +15,8 @@
     <ProjectReference Include="..\BLL\HearMe.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+
 </Project>

@@ -7,15 +7,12 @@ namespace HearMe.Controllers
     public class AdminController : Controller
     {
         private readonly IModelService<SongDTM> _songService;
-        private readonly IModelService<GenreDTM> _genreService;
         private readonly IModelService<UserDTM> _userService;
         private readonly IUserToConfirmService _userToConfirmService;
 
-        public AdminController(IModelService<SongDTM> songService, IModelService<GenreDTM> genreService,
-                               IModelService<UserDTM> userService, IUserToConfirmService userToConfirmService)
+        public AdminController(IModelService<SongDTM> songService, IModelService<UserDTM> userService, IUserToConfirmService userToConfirmService)
         {
             _songService = songService;
-            _genreService = genreService;
             _userService = userService;
             _userToConfirmService = userToConfirmService;
         }
@@ -23,72 +20,41 @@ namespace HearMe.Controllers
         // GET: AdminController
         public async Task<IActionResult> Index() => View(await _songService.GetItemsList());
 
-        // GET: AdminController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+        // GET: AdminController/GetUsersToConfirmList
+        public async Task<IActionResult> GetUsersToConfirmList() => View(await _userToConfirmService.GetUsersToConfirmList());
 
-        // GET: AdminController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AdminController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        // POST: AdminController/ConfirmUser/id
+        public async Task<IActionResult> ConfirmUser(int id, bool isAdmin)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                UserDTM? user = await _userToConfirmService.GetUserToConfirm(id);
+                user.IsAdmin = isAdmin;
+                await _userService.CreateItem(user);
+                await _userToConfirmService.DeleteUserToConfirm(id);
+                TempData["SM"] = $"User {user.Login} was confirmed and added to legal users list";
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError("", ex.Message);
+                return RedirectToAction(nameof(GetUsersToConfirmList));
             }
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // POST: AdminController/DeclineUser/id
+        public async Task<IActionResult> DeclineUser(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _userToConfirmService.DeleteUserToConfirm(id);
+                TempData["SM"] = "User was declined";
+                return RedirectToAction(nameof(GetUsersToConfirmList));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
-            }
-        }
-
-        // GET: AdminController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
+                ModelState.AddModelError("", ex.Message);
+                return RedirectToAction(nameof(GetUsersToConfirmList));
             }
         }
     }

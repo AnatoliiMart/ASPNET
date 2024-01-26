@@ -1,15 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HearMe.BLL.DTM;
+using HearMe.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HearMe.Controllers
 {
     public class GenreController : Controller
     {
-        // GET: GenreController
-        public ActionResult Index()
+        private readonly IModelService<GenreDTM> _genreService;
+
+        public GenreController(IModelService<GenreDTM> genreService)
         {
-            return View();
+            _genreService = genreService;
         }
+
+        // GET: GenreController
+        public async Task<IActionResult> Index() => View(await _genreService.GetItemsList());
 
         // GET: GenreController/Details/5
         public ActionResult Details(int id)
@@ -18,37 +23,50 @@ namespace HearMe.Controllers
         }
 
         // GET: GenreController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult CreateGenre() => View(nameof(CreateGenre));
 
         // POST: GenreController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(GenreDTM model)
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return View(model);
+
+                await _genreService.CreateItem(model);
+                TempData["SM"] = "Genre was created sucessfully";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
             }
         }
 
         // GET: GenreController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> EditGenre(int id)
         {
-            return View();
+            try
+            {
+                return View(await _genreService.GetItem(id));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: GenreController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult EditGenre(int id, [Bind("Id, Name")] GenreDTM model)
         {
+            if (!ModelState.IsValid)
+                return View(model);
             try
             {
                 return RedirectToAction(nameof(Index));

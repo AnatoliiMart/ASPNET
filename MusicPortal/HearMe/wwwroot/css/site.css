@@ -1,3 +1,6 @@
+:root {
+    --audio-controls-background: #202124;
+}
 html {
   font-size: 14px;
 }
@@ -18,5 +21,110 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
+.content {
+    flex-grow: 1;
+}
+/* PLAYER styles */
+.audio-player {
+    width: 100%;
+    position: fixed;
+    display: flex;
+    align-items:center;
+    bottom: 0;
+    height: 7%;
+    z-index: 999; 
+}
+
+.player-controls {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.main-controls {
+    width: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 20px;
+}
+
+.play-pause {
+    background-color: var(--audio-controls-background);
+    color: #fff;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.progress-bar {
+    background-color: #535353;
+    height: 2px;
+    width: 100%;
+    position: absolute;
+    top:0;
+    overflow: hidden;
+}
+
+.progress {
+    background-color: #ff0000;
+    height: 100%;
+    width: 50%;
+    border-radius: 5px;
+}
+
+.time-display {
+    color: #fff;
+}
+.additional-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.repeat {
+    display: flex;
+    background-color: var(--audio-controls-background);
+    color: #535353;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+.repeat.active {
+    color: #fff;
+}
+.volume-icon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.volume-control {
+    height: 2px;
+    margin-right: 10px;
+    background: var(--audio-controls-background);
+}
+
+audio {
+    width: 100%;
+    margin-top: 10px;
+    background-color: var(--audio-controls-background);
+    color: #fff;
+    border: 1px solid #535353;
+    border-radius: 5px;
+}
+/*End PLAYER styles*/
