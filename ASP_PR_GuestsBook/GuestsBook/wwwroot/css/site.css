@@ -18,5 +18,113 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+ margin-top:50px;
+  width: 100%;
+  display:flex;
+  flex-direction:row;
+  align-items:flex-start;
+  justify-content: space-around;
+  background-image: linear-gradient(to left top, #0c397c, #006cb6, #009dbc, #00c987, #71eb12);
+}
+header{
+    position: absolute;
+    top:0;
+    width:100%;
+}
+.message-container {
+    width: 70%;
+}
+.message .buttons-message{
+    align-self:center;
+    width: 100%;
+    display:flex;
+    justify-content: space-around;
+    margin: 10px;
+}
+.buttons-message button{
+    font-weight: bold;
+    font-style:italic;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 20px;
+}
+.buttons-message button:hover{
+    transition: .5s;
+}
+.buttons-message #btn-change {
+    color: #18e101;
+    background: #eee900;
+    box-shadow: 0px 0px 10px 4px rgba(237,201,0,1);
+}
+.buttons-message #btn-details {
+    color: #eee900;
+    background: #18e101;
+    box-shadow: 0px 0px 10px 4px rgba(2,179,17,1);
+}
+.buttons-message #btn-delete {
+    color: #0c5898;
+    background: #eb4e4e;
+    box-shadow: 0px 0px 10px 4px rgba(194,31,31,1);
+}
+.buttons-message #btn-change:hover{
+    color: #eee900;
+    background: #18e101;
+}
+.buttons-message #btn-details:hover {
+    color: #18e101;
+    background: #eee900;
+}
+.buttons-message #btn-delete:hover {
+    color: #eb4e4e;
+    background: #0c5898;
+}
+.message-container .message {
+    display: flex;
+    align-content: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 50%;
+    margin: 30px 10px;
+    padding: 10px;
+    background: #cbc8ea;
+    border-radius: 10px;
+    box-shadow: 7px 7px 10px 3px rgba(140,136,179,1);
+}
+.message h5{
+    font-size: 14px;
+    align-self:flex-end;
+    color: #fa6808;
+}
+.message p{
+    font-size: 1.2em;
+    font-style:italic;
+    color: #167415
+}
+.form-container {
+    width: 30%;
+    height: 100%;
+    background-color: lightslategray;
+}
+.form-container form{
+    width:100%;
+    margin:10px;
+    display:flex;
+    align-items: flex-start;
+    justify-content:flex-start;
+    flex-direction:column;
+}
+.form-container form input{
+    width:70%;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 15px;
+
+}
+.form-container form label{
+    padding: 10px 0; 
+    font-family:'Microsoft YaHei UI';
+    font-size: 1.2em;
+    font-weight: bold;
+    color: teal;
+    text-shadow: 4px 3px 5px rgba(25, 215, 216, 0.8);
 }

@@ -8,27 +8,18 @@ namespace HearMe.Controllers
     {
         private readonly IModelService<GenreDTM> _genreService;
 
-        public GenreController(IModelService<GenreDTM> genreService)
-        {
-            _genreService = genreService;
-        }
+        public GenreController(IModelService<GenreDTM> genreService) => _genreService = genreService;
 
         // GET: GenreController
         public async Task<IActionResult> Index() => View(await _genreService.GetItemsList());
 
-        // GET: GenreController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: GenreController/Create
+        [HttpGet]
         public IActionResult CreateGenre() => View(nameof(CreateGenre));
 
         // POST: GenreController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(GenreDTM model)
+        public async Task<IActionResult> CreateGenre(GenreDTM model)
         {
             try
             {
@@ -65,36 +56,35 @@ namespace HearMe.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditGenre(int id, [Bind("Id, Name")] GenreDTM model)
         {
+            if (id != model.Id)
+                return NotFound();
             if (!ModelState.IsValid)
                 return View(model);
+
             try
             {
+                _genreService.UpdateItem(model);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
             }
         }
 
         // GET: GenreController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: GenreController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteGenre(int id)
         {
             try
             {
+                await _genreService.DeleteItem(id);
+                TempData["SM"] = "Genre was sucessfully deleted";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception)
             {
-                return View();
+                return NotFound();
             }
         }
     }

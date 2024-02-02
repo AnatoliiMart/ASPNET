@@ -6,16 +6,17 @@ namespace HearMe.Controllers
     {
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetString("LastName") != null
-                   && HttpContext.Session.GetString("FirstName") != null)
-                return View();
-            else
-                return RedirectToAction("Login", "Account");
+            return HttpContext.Request.Cookies["Login"] != null
+                   ? View()
+                   : RedirectToAction("Login", "Account");
         }
 
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear();
+            HttpContext.Response.Cookies.Delete("FullName");
+            HttpContext.Response.Cookies.Delete("Login");
+            HttpContext.Response.Cookies.Delete("IsAdmin");
+
             return RedirectToAction("Login", "Account");
         }
     }

@@ -12,57 +12,32 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-black border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Messages" asp-action="Index">GuestsBook</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-evenly">
                     
-                    @if (Context.Session.GetString("LastName") != null
-                        && Context.Session.GetString("FirstName") != null)
+                    @if (Context.Request.Cookies["FirstName"] == null && Context.Request.Cookies["LastName"] == null)
                     {
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Messages" asp-action="MyMessages">My messages</a>
-                            </li>
-                        </ul>
-                    <a class="navbar-brand" 
-                        asp-area="" 
-                        asp-controller="Messages" 
-                        asp-action="MyMessages"
-                    >
-                        @Context.Session.GetString("LastName")&nbsp;
-                        @Context.Session.GetString("FirstName")
-                    </a> 
-                    <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                        <a href="#" class="nav-link text-light" id="btn-all-messages">All Messages</a>
+                        <a href="#" class="navbar-brand" id="btn-open-login-dialog">Login</a>
                     }
                     else
                     {
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Messages" asp-action="Index">Messages</a>
-                            </li>
-                        </ul>
-                        <a class="navbar-brand"
-                           asp-area=""
-                           asp-controller="Account"
-                           asp-action="Login">
-                           LOGIN
+                        <a href="#" class="nav-link text-light" id="btn-self-messages">My Messages</a>
+                        <a href="#"
+                           class="navbar-brand" 
+                           id="btn-all-messages-named">
+                           @Context.Request.Cookies["FirstName"]&nbsp;@Context.Request.Cookies["LastName"] 
                         </a>
+                        <a href="#" class="navbar-brand" id="btn-logout">Logout</a>
                     }
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+@RenderBody()
+ 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: true)
 </body>
 </html>

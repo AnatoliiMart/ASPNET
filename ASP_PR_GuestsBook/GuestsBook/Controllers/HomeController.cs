@@ -8,8 +8,8 @@ namespace GuestsBook.Controllers
     {
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetString("LastName") != null
-                   && HttpContext.Session.GetString("FirstName") != null)
+            if (HttpContext.Request.Cookies["LastName"] != null
+                   && HttpContext.Request.Cookies["FirstName"] != null)                
                 return View();
             else
                 return RedirectToAction("Login", "Account");
@@ -21,7 +21,9 @@ namespace GuestsBook.Controllers
         }
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear();
+            HttpContext.Response.Cookies.Delete("Login");
+            HttpContext.Response.Cookies.Delete("FirstName");
+            HttpContext.Response.Cookies.Delete("LastName");
             return RedirectToAction("Login", "Account");
         }
     }

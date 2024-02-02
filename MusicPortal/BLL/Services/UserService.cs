@@ -82,15 +82,13 @@ namespace HearMe.BLL.Services
         {
             if (user == null)
                 throw new ValidationException("", "Wrong data income!");
-            var usr = new User
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Login = user.Login,
-                AvatarPath = user.AvatarPath,
-                IsAdmin = user.IsAdmin,
-            };
+            var usr = await DataBase.Users.Get(user.Id);
+            usr.Id = user.Id;
+            usr.FirstName = user.FirstName;
+            usr.LastName = user.LastName;
+            usr.Login = user.Login;
+            usr.AvatarPath = user.AvatarPath;
+            usr.IsAdmin = user.IsAdmin;
             DataBase.Users.Update(usr);
             await DataBase.Save();
         }

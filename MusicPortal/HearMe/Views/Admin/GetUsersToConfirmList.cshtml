@@ -52,11 +52,11 @@
                 @Html.DisplayFor(modelItem => item.AvatarPath)
             </td>
             <td>
-                    @Html.CheckBoxFor(modelItem => item.IsAdmin)
+                <input asp-route="isAdmin" type="checkbox"/>
             </td>
             <td>
                     
-                    <a asp-action="ConfirmUser" asp-route-id="@item.Id"><input type="submit" value="Confirm" class="btn btn-success" /></a>
+                    <a asp-action="ConfirmUser" asp-route-id="@item.Id" asp-route-isAdmin="isAdmin">Confirm</a>
                 <a asp-action="DeclineUser" asp-route-id="@item.Id" class="btn btn-danger">Decline</a>
             </td>
         </tr>

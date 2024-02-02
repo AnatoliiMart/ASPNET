@@ -1,8 +1,17 @@
-﻿@{
+﻿@model HearMe.BLL.DTM.UserDTM
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <div class="leftMenu">
+        <menu>
+            @Html.ActionLink("Edit", "Edit", "Account")
+            <a asp-action="Index" asp-controller="Song">Songs</a>
+            <a asp-action="Index" asp-controller="Genre">Genres</a>
+        </menu>
+    </div>
+    <div class="mainMenu">
+
+    </div>
 </div>

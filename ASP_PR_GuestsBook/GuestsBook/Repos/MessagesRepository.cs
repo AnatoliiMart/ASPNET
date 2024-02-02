@@ -1,6 +1,5 @@
 ﻿using GuestsBook.Models;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
 
 namespace GuestsBook.Repos
 {
@@ -33,10 +32,10 @@ namespace GuestsBook.Repos
 
         public async Task SaveChanges() => await _context.SaveChangesAsync();
 
-        public void UpdateMessage(Message msg) => _context.Update(msg); 
+        public void UpdateMessage(Message msg) => _context.Update(msg);
 
-        public async Task CreateMessage(Message msg) => await _context.AddAsync(msg);   
-        
+        public async Task CreateMessage(Message msg) => await _context.AddAsync(msg);
+
         public async Task DeleteMessage(int id)
         {
             var message = await GetMessage(id);
@@ -45,6 +44,6 @@ namespace GuestsBook.Repos
                 _context.Messages.Remove(message);
         }
 
-       public async Task<bool> MessageExists(int id) => await _context.Messages.AnyAsync(e => e.Id == id);
+        public async Task<bool> MessageExists(int id) => await _context.Messages.AnyAsync(e => e.Id == id);
     }
 }

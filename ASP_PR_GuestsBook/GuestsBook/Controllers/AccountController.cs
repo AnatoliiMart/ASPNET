@@ -48,9 +48,9 @@ namespace GuestsBook.Controllers
                 ModelState.AddModelError("", "Incorrect login or password!");
                 return View(model);
             }
-            HttpContext.Session.SetString("FirstName", user.FirstName ?? string.Empty);
-            HttpContext.Session.SetString("LastName", user.LastName ?? string.Empty);
-            HttpContext.Session.SetString("Login", user.Login);
+            HttpContext.Response.Cookies.Append("FirstName", user.FirstName ?? string.Empty);
+            HttpContext.Response.Cookies.Append("LastName", user.LastName ?? string.Empty);
+            HttpContext.Response.Cookies.Append("Login", user.Login);
             return RedirectToAction("Index", "Home");
         }
 

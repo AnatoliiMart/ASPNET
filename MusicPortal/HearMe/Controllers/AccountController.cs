@@ -2,6 +2,7 @@
 using HearMe.BLL.Interfaces;
 using HearMe.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic.FileIO;
 
 namespace HearMe.Controllers
 {
@@ -53,10 +54,12 @@ namespace HearMe.Controllers
                 ModelState.AddModelError("", "Incorrect login or password!");
                 return View(model);
             }
-            HttpContext.Session.SetString("FirstName", user.FirstName ?? string.Empty);
-            HttpContext.Session.SetString("LastName", user.LastName ?? string.Empty);
-            HttpContext.Session.SetString("IsAdmin", user.IsAdmin ? "true" : "false");
-            return (HttpContext.Session.GetString("IsAdmin")) == "true" ? RedirectToAction("Index", "Admin") : RedirectToAction("Index", "Home");
+            CookieOptions option = new();
+            option.Expires = DateTime.Now.AddDays(30);
+            HttpContext.Response.Cookies.Append("FullName", user.FirstName + " " + user.LastName, option);
+            HttpContext.Response.Cookies.Append("Login", user.Login);
+            HttpContext.Response.Cookies.Append("IsAdmin", user.IsAdmin.ToString(), option);
+            return HttpContext.Request.Cookies["IsAdmin"] == "True" ? RedirectToAction("Index", "Admin") : RedirectToAction("Index", "Home");
         }
 
         // GET: AccountController/Regist
@@ -115,6 +118,66 @@ namespace HearMe.Controllers
 
             TempData["SM"] = "Your account has been successfully created. Wait for administrator confirmation";
             return RedirectToAction(nameof(Login));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit()
+        {
+            return View(await _userService.GetItem((await _userService.GetItemsList()).Single(usr => usr.Login == HttpContext.Request.Cookies["Login"]).Id));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id,/* [Bind("Id FirstName, LastName, Password, IsAdmin")]*/ UserDTM model, IFormFile? fileUpload)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Incorrect data");
+                return View(model);
+            }
+            UserDTM user = await _userService.GetItem(id);
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.IsAdmin = model.IsAdmin;
+            if (model.Password != null || model.Password != string.Empty)
+                await _passwordService.ChangePassword(user.Id, model.Password);
+
+            if (fileUpload != null && fileUpload.Length > 0)
+            {
+                //Check upload file extension
+                string ext = fileUpload.ContentType.ToLower();
+                if (ext != "image/jpg" &&
+                    ext != "image/jpeg" &&
+                    ext != "image/bmp" &&
+                    ext != "image/pjpeg" &&
+                    ext != "image/gif" &&
+                    ext != "image/x-png" &&
+                    ext != "image/png")
+                {
+                    ModelState.AddModelError("", "Incorrect extention! Choose anuther file!");
+                    return View(model);
+                }
+
+                string path = "/img/" + fileUpload.FileName;
+                if (user.AvatarPath != null)
+                {
+                    string oldPath = "/img/" + user.AvatarPath;
+                    FileSystem.DeleteFile(_appEnvironment.WebRootPath + oldPath);
+                }
+                using (FileStream filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                    await fileUpload.CopyToAsync(filestream);
+                user.AvatarPath = path;
+            }
+            else
+            {
+                IEnumerable<string> oldPath = from _movie in await _userService.GetItemsList()
+                                              where _movie.Id == model.Id
+                                              select _movie.AvatarPath;
+                user.AvatarPath = oldPath.First();
+            }
+            await _userService.UpdateItem(user);
+            TempData["SM"] = "User data is refreshed sucessfully";
+            return View(model);
         }
     }
 }
