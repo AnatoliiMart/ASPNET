@@ -32,23 +32,26 @@ header{
     width:100%;
 }
 .message-container {
-    width: 70%;
+    width: 100%;
 }
 .message .buttons-message{
     align-self:center;
     width: 100%;
     display:flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     margin: 10px;
 }
-.buttons-message button{
+.buttons-message a{
+    margin-top:15px;
+    text-decoration: none;
     font-weight: bold;
     font-style:italic;
     padding: 5px 15px;
     border: none;
     border-radius: 20px;
 }
-.buttons-message button:hover{
+.buttons-message a:hover{
     transition: .5s;
 }
 .buttons-message #btn-change {
@@ -100,31 +103,112 @@ header{
     font-style:italic;
     color: #167415
 }
-.form-container {
-    width: 30%;
-    height: 100%;
-    background-color: lightslategray;
-}
-.form-container form{
-    width:100%;
-    margin:10px;
-    display:flex;
-    align-items: flex-start;
-    justify-content:flex-start;
-    flex-direction:column;
-}
-.form-container form input{
-    width:70%;
+.dialog {
+    width: 35%;
+    height: fit-content;
     border: none;
-    border-radius: 20px;
-    padding: 5px 15px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 15px 7px rgba(0,0,0,0.75);
+    background-image: linear-gradient(to right bottom, #0c397c, #006cb6, #009dbc, #00c987, #71eb12);
+}
+#dialogContent{
+    position:fixed;
+    height: max-content;
+    top:30%;
+    right: 30%;
+}
+#dialogContent .dialog-content{
+    padding: 20px;
+}
+.dialog-content textarea{
+    width:80%;
+    border: none;
+    border-radius: 15px;
+    min-height:150px;
+    padding: 5px 10px;
+}
+.dialog .dialog-content {
+    width: 100%;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+.dialog .dialog-content input{
+    width: 80%;
+    margin-bottom:10px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 15px;
+}
+.dialog .dialog-content label{
+    color: #ed9c0a;
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-bottom: 5px
+}
+.dialog .dialog-content .buttons{
+    width:80%;
+    display: flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+}
+.dialog .dialog-content .buttons button{
+    margin-top:20px;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    width:120px;
+    font-size: 1.1em;
+    font-weight: 500;
 
 }
-.form-container form label{
-    padding: 10px 0; 
-    font-family:'Microsoft YaHei UI';
-    font-size: 1.2em;
-    font-weight: bold;
-    color: teal;
-    text-shadow: 4px 3px 5px rgba(25, 215, 216, 0.8);
+.dialog .dialog-content .buttons a{
+    text-decoration:none;
+    margin-top:20px;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    width:120px;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+.dialog .dialog-content h3{
+    color: #16e81a;
+    text-shadow: 3px 3px 5px white;
+    margin-bottom: 10px;
+}
+.dialog .dialog-content .buttons button:hover, a:hover{
+    transition: 0.5s;
+}
+#btn-close-login-dialog, #btn-close-regist-dialog {
+    background: none;
+    border: none;
+    color: #eb4e4e;
+    position: absolute;
+    top: 16px;
+    right: 15px;
+}
+.btn-green {
+    color: white;
+    background-color: #16e81a;
+    box-shadow: 0px 0px 10px 7px white;
+}
+.btn-green:hover {
+    color: #16e81a;
+    background: white;
+    box-shadow: 0px 0px 10px 7px #16e81a;
+}
+.btn-blue {
+    color: #0e4fea;
+    background-color: #0aefda;
+    box-shadow: 0px 0px 10px 7px #0e4fea;
+}
+.btn-blue:hover {
+    color: #0aefda;
+    background: #0e4fea;
+    box-shadow: 0px 0px 10px 7px #0aefda;
 }

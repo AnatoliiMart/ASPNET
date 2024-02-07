@@ -2,8 +2,6 @@
 using GuestsBook.Repos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
 
 namespace GuestsBook.Controllers
 {
@@ -11,23 +9,6 @@ namespace GuestsBook.Controllers
     {
         private readonly IMessagesRepository _repository;
         public MessagesController(IMessagesRepository repository) => _repository = repository;
-
-        // GET: Messages
-        public IActionResult Index() => View();
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllMessages()
-        {
-            return ((await _repository.GetAllMessages()).Count == 0)
-                   ? Problem("No Messages")
-                   : Json((await _repository.GetAllMessages()).ToJson());
-        }
-
-        public async Task<IActionResult> MyMessages()
-        {
-            User userSpecification = await _repository.GetUserByLogin(HttpContext.Request.Cookies["Login"]).FirstAsync();
-            return View(await _repository.GetSelfMessages(userSpecification));
-        }
 
         // GET: Messages/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -39,7 +20,13 @@ namespace GuestsBook.Controllers
 
             return (msg == null)
                    ? Problem("Message was not found!")
-                   : Json(msg.ToJson());
+                   : PartialView("Details", msg);
+        }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewData["UserId"] = new SelectList(_repository.GetUserByLogin(HttpContext.Request.Cookies["Login"]), "Id", "Login");
+            return PartialView();
         }
 
         // POST: Messages/Create
@@ -51,15 +38,23 @@ namespace GuestsBook.Controllers
             {
                 await _repository.CreateMessage(message);
                 await _repository.SaveChanges();
-                return Json("Message was added sucessfully!");
+                return RedirectToAction("Index", "Home");
             }
-            ViewData["UserId"] = new SelectList(_repository.GetUserByLogin(HttpContext.Request.Cookies["Login"]), "Id", "Login", message.UserId).First();
+            ViewData["UserId"] = new SelectList(_repository.GetUserByLogin(HttpContext.Request.Cookies["Login"]), "Id", "Login", message.UserId);
             return Problem("Add message error! Try again!");
         }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return Problem("NotFound!");
+            var model = await _repository.GetMessage(id);
+            if (model == null) return Problem("NotFound");
+            ViewData["UserId"] = new SelectList(_repository.GetUserByLogin(HttpContext.Request.Cookies["Login"]), "Id", "Login", model.UserId);
+            return PartialView(model);
+        }
 
-        // PUT: Messages/Edit/5
-        [HttpPut]
-        [ValidateAntiForgeryToken]
+        // POST: Messages/Edit/5
+        [HttpPost]
         public async Task<IActionResult> Edit([Bind("Id,Mesage,UserId")] Message message)
         {
 
@@ -67,22 +62,21 @@ namespace GuestsBook.Controllers
             {
                 _repository.UpdateMessage(message);
                 await _repository.SaveChanges();
-                return Json("Message was updated sucessfully!");
+                return RedirectToAction("Index", "Home");
             }
-            return Problem("Message update error! Try again");
+
+            return Problem("Incorrect data");
         }
 
 
-        // DELETE: Messages/Delete/5
-        [HttpDelete]
-        [ValidateAntiForgeryToken]
+        // POST: Messages/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             if ((await _repository.GetAllMessages()).Count == 0)
                 return Problem("The messages list is empty! Nothing to delete!");
             await _repository.DeleteMessage(id);
             await _repository.SaveChanges();
-            return Json("Message was sucessfully deleted!");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

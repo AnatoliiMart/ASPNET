@@ -20,7 +20,7 @@ namespace GuestsBook.Controllers
             if ((await _repository.GetAllUsers()).Count == 0)
                 return RedirectToAction("Regist", "Account");
 
-            return View();
+            return PartialView(nameof(Login));
         }
 
         // POST: AccountController/Login
@@ -31,14 +31,14 @@ namespace GuestsBook.Controllers
             if ((await _repository.GetAllUsers()).Count == 0)
                 return RedirectToAction("Regist", "Account");
             if (!ModelState.IsValid)
-                return View(model);
+                return PartialView(model);
 
             IQueryable<User> users = _repository.GetUsersByLogin(model);
 
             if (!users.Any())
             {
                 ModelState.AddModelError("", "Incorrect login or password!");
-                return View(model);
+                return PartialView(model);
             }
 
             User user = users.First();
@@ -46,17 +46,19 @@ namespace GuestsBook.Controllers
             if (await _repository.IsPasswordCorrect(user, model))
             {
                 ModelState.AddModelError("", "Incorrect login or password!");
-                return View(model);
+                return PartialView(model);
             }
-            HttpContext.Response.Cookies.Append("FirstName", user.FirstName ?? string.Empty);
-            HttpContext.Response.Cookies.Append("LastName", user.LastName ?? string.Empty);
-            HttpContext.Response.Cookies.Append("Login", user.Login);
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(30);
+            HttpContext.Response.Cookies.Append("FirstName", user.FirstName ?? string.Empty, options);
+            HttpContext.Response.Cookies.Append("LastName", user.LastName ?? string.Empty, options);
+            HttpContext.Response.Cookies.Append("Login", user.Login, options);
             return RedirectToAction("Index", "Home");
         }
 
         // GET: AccountController/Regist
         [HttpGet]
-        public ActionResult Regist() => View();
+        public ActionResult Regist() => PartialView();
 
         // POST: AccountController/Regist
         [HttpPost]
@@ -64,11 +66,12 @@ namespace GuestsBook.Controllers
         public async Task<IActionResult> Regist(RegistMDL model)
         {
             if (!ModelState.IsValid)
-                return View(model);
+                return PartialView(model);
+
             if (await _repository.IsLoginExists(model.Login))
             {
                 ModelState.AddModelError("", "This login is taken!");
-                return View(model);
+                return PartialView(model);
             }
 
             User user = new()
@@ -81,7 +84,7 @@ namespace GuestsBook.Controllers
 
             await _repository.AddUserToDb(user);
 
-            return RedirectToAction("Login");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

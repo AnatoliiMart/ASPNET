@@ -4,35 +4,28 @@
     ViewData["Title"] = "Login";
 }
 
-<h1>Login</h1>
 
-<h4>LoginMDL</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Login" class="control-label"></label>
-                <input asp-for="Login" class="form-control" />
-                <span asp-validation-for="Login" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group" style="margin-top: 20px">
-                <input type="submit" value="Login" class="btn btn-success" /> 
-                <a asp-action="Regist" class="btn btn-primary">Registration</a>
-            </div>
-        </form>
+
+<form asp-action="Login" class="dialog-content">
+    <h3>Login</h3>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <label asp-for="Login" class="control-label"></label>
+        <input asp-for="Login" class="form-control" />
+        <span asp-validation-for="Login" class="text-danger"></span>
+
+        <label asp-for="Password" class="control-label"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    <div class="buttons">
+        <button type="submit" id="btn-login-dialog" class="btn-green">Login</button>
+        <a asp-action="Regist" asp-controller="Account" id="btn-regist" class="btn-blue">Registration</a>
     </div>
-</div>
-
-<div>
-   
-</div>
+    <button type="button" id="btn-close-login-dialog">
+        <span class="material-symbols-outlined">
+            cancel
+        </span>
+    </button>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

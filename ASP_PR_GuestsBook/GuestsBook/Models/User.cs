@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 
 namespace GuestsBook.Models
 {
@@ -15,7 +16,7 @@ namespace GuestsBook.Models
 
         public string? FirstName { get; set; }
 
-        public string? LastName{ get; set; }
+        public string? LastName { get; set; }
 
         [NotNull]
         public string? Login { get; set; }
@@ -26,6 +27,7 @@ namespace GuestsBook.Models
         [NotNull]
         public string? Salt { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Message>? Messages { get; set; }
 
     }

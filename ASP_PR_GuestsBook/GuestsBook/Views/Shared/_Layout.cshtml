@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GuestsBook.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     <header>
@@ -17,27 +18,26 @@
                     @if (Context.Request.Cookies["FirstName"] == null && Context.Request.Cookies["LastName"] == null)
                     {
                         <a href="#" class="nav-link text-light" id="btn-all-messages">All Messages</a>
-                        <a href="#" class="navbar-brand" id="btn-open-login-dialog">Login</a>
+                        <a asp-action="Login" asp-controller="Account" class="navbar-brand" id="btn-open-login-dialog">Login</a>
                     }
                     else
                     {
-                        <a href="#" class="nav-link text-light" id="btn-self-messages">My Messages</a>
                         <a href="#"
                            class="navbar-brand" 
                            id="btn-all-messages-named">
                            @Context.Request.Cookies["FirstName"]&nbsp;@Context.Request.Cookies["LastName"] 
                         </a>
-                        <a href="#" class="navbar-brand" id="btn-logout">Logout</a>
+                        <a asp-controller="Home" asp-action="Logout" class="navbar-brand" id="btn-logout">Logout</a>
                     }
                 </div>
             </div>
         </nav>
     </header>
 @RenderBody()
- 
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: true)
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

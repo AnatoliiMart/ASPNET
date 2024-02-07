@@ -1,76 +1,114 @@
-﻿@{
+﻿@model IEnumerable<GuestsBook.Models.Message>
+@{
     ViewData["Title"] = "Home Page";
 }
-@{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
-}
 @section Scripts{
+    <script>
+        $(document).ready(function () {
 
+            $(".create-dialog").on("click", function (e) {
+                e.preventDefault();
+
+                $("<div id='dialogContent'></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .load(this.href)
+                    .dialog({
+                        title: "Add Message",
+                        close: function () { $(this).remove() },
+                        modal: true,
+                        buttons: {
+                            "Add": function () {
+                                $.ajax({
+                                    url: "@Url.Action("Create", "Messages")",
+                                    type: "POST",
+                                    data: $('form').serialize(),
+                                    datatype: "json",
+                                    success: function (result) {
+
+                                        $("#dialogContent").html(result);
+                                    }
+                                });
+                            }
+                        }
+                    });
+            });
+
+            $(".edit-dialog").on("click", function (e) {
+                e.preventDefault();
+
+                $("<div id='dialogContent'></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .load(this.href)
+                    .dialog({
+                        title: "Edit Message",
+                        close: function () { $(this).remove() },
+                        modal: true,
+                        buttons: {
+                            "Сохранить": function () {
+                                $.ajax({
+                                    url: "@Url.Action("Edit", "Messages")",
+                                    type: "POST",
+                                    data: $('form').serialize(),
+                                    datatype: "json",
+                                    success: function (result) {
+
+                                        $("#dialogContent").html(result);
+                                    }
+                                })
+                            }
+                        }
+                    });
+            });
+            $(".details-dialog").on("click", function (e) {
+                e.preventDefault();
+
+                $("<div id='dialogContent'></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .load(this.href)
+                    .dialog({
+                        title: "Message Details",
+                        modal: true,
+                    });
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
 
-
-
-<dialog class="login-dialog">
-    <form id="login-form">
-        <label for="login">Login</label>
-        <input type="text" id="login" name="login" required>
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-        <label for="age">Возраст:</label>
-        <button type="button" id="btn-login-dialog">Login</button>
-        <button type="button" id="btn-regist">Registration</button>
-        <button type="button" id="btn-close-login-dialog">Close</button>
-    </form>
-</dialog>
-<dialog class="registration-dialog">
-    <form id="registration-form">
-        <input type="hidden" id="hdn-user-id" name="id">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" required>
-        <label for="surname">Surname</label>
-        <input type="text" id="surname" name="surname" required>
-        <label for="login-regist">Login</label>
-        <input type="text" id="login-regist" name="login-regist" required>
-        <label for="password-regist">Password</label>
-        <input type="password" id="password-regist" name="password-regist" required>
-        <button type="button" id="btn-regist-dialog">Registrate</button>
-        <button type="button" id="btn-back-to-login">Back to Login</button>
-        <button type="button" id="btn-close-regist-dialog">Close</button>
-    </form>
-</dialog>
-<div class="message-container">
-
-    <div class="message">
-        <h5 id="user-login">User login field</h5>
-        <p id="message-text">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Animi rem rerum aperiam corporis odio sunt voluptatum quo,
-            et amet nemo officiis, reiciendis voluptas repudiandae,
-            iure ratione id necessitatibus soluta voluptates?
+<div class="message-container" style="padding-top: 20px;">
+    @if (Context.Request.Cookies["Login"] != null)
+    {
+        <p style="padding-left: 10px;">
+            <a asp-action="Create" asp-controller="Messages" class="create-dialog btn btn-primary">Add Message</a>
         </p>
-        <div class="buttons-message">
-            <button type="button" id="btn-change">Change</button>
-            <button type="button" id="btn-details">Details</button>
-            <button type="button" id="btn-delete">Delete</button>
-        </div>
+    }
+
+@foreach (var item in Model)
+{
+    <div id='message + @item.Id' class="message">
+        <h5 id="user-login">@item.User!.Login</h5>
+        <p id="message-text">
+            @item.Mesage
+        </p>
+        @if (Context.Request.Cookies["Login"] == item.User.Login)
+        {
+            <div class="buttons-message">
+                <a asp-action="Edit" asp-controller="Messages" asp-route-id="@item.Id" id="btn-change" class="edit-dialog">Change</a>
+                <a asp-action="Details" asp-controller="Messages" asp-route-id="@item.Id" id="btn-details" class="details-dialog">Details</a>
+                <a asp-action="Delete" asp-controller="Messages" asp-route-id="@item.Id" id="btn-delete">Delete</a>
+            </div>
+        }
+        else
+        {
+            <div class="buttons-message" style="justify-content:flex-start !important">
+                <a asp-action="Details" asp-controller="Messages" asp-route-id="@item.Id" id="btn-details" class="details-dialog">Details</a>
+            </div>
+        }
     </div>
-</div>
-<div class="form-container">
-    <form id="registration-form">
-        <input type="hidden" id="hdn-user-id" name="id">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" required>
-        <label for="surname">Surname</label>
-        <input type="text" id="surname" name="surname" required>
-        <label for="login-regist">Login</label>
-        <input type="text" id="login-regist" name="login-regist" required>
-        <label for="password-regist">Password</label>
-        <input type="password" id="password-regist" name="password-regist" required>
-        <div class="buttons">
-            <button type="button" id="btn-regist-dialog">Registrate</button>
-            <button type="button" id="btn-back-to-login">Back to Login</button>
-            <button type="button" id="btn-close-regist-dialog">Close</button>
-        </div>
-    </form>
-    
+}
 </div>
