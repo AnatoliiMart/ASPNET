@@ -56,10 +56,11 @@ namespace HearMe.Controllers
             }
             CookieOptions option = new();
             option.Expires = DateTime.Now.AddDays(30);
+
             HttpContext.Response.Cookies.Append("FullName", user.FirstName + " " + user.LastName, option);
-            HttpContext.Response.Cookies.Append("Login", user.Login);
+            HttpContext.Response.Cookies.Append("Login", user.Login!);
             HttpContext.Response.Cookies.Append("IsAdmin", user.IsAdmin.ToString(), option);
-            return HttpContext.Request.Cookies["IsAdmin"] == "True" ? RedirectToAction("Index", "Admin") : RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: AccountController/Regist
@@ -161,7 +162,7 @@ namespace HearMe.Controllers
                 string path = "/img/" + fileUpload.FileName;
                 if (user.AvatarPath != null)
                 {
-                    string oldPath = "/img/" + user.AvatarPath;
+                    string oldPath = user.AvatarPath;
                     FileSystem.DeleteFile(_appEnvironment.WebRootPath + oldPath);
                 }
                 using (FileStream filestream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))

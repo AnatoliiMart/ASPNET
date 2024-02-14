@@ -4,55 +4,38 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <h3>Account settings</h3>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id"/>
+    <input type="hidden" asp-for="Login" value = "@Context.Request.Cookies["Login"] class="form-control" />
 
-<h4>UserDTM</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" class="form-control" />
-            <input type="hidden" asp-for="Login" value = "@Context.Request.Cookies["Login"]" class="form-control" />
+    <label asp-for="FirstName"></label>
+    <input asp-for="FirstName" />
+    <span asp-validation-for="FirstName" class="text-danger"></span>
 
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AvatarPath" class="control-label"></label>
-                <input type="file" name="fileUpload" asp-for="AvatarPath" class="form-control" />
-                <span asp-validation-for="AvatarPath" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" value="@string.Empty" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            @if (Context.Request.Cookies["IsAdmin"] == "True")
-            {
-                <div class="form-group form-check">
-                    <label class="form-check-label">
-                        <input class="form-check-input" asp-for="IsAdmin" /> @Html.DisplayNameFor(model => model.IsAdmin)
-                    </label>
-            </div>
-            }
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <label asp-for="LastName"></label>
+    <input asp-for="LastName" />
+    <span asp-validation-for="LastName" class="text-danger"></span>
+
+    <label asp-for="AvatarPath"></label>
+    <input type="file" name="fileUpload" asp-for="AvatarPath" >
+    <span asp-validation-for="AvatarPath" class="text-danger"></span>
+
+    <label asp-for="Password"></label>
+    <input asp-for="Password" value="@string.Empty" />
+    <span asp-validation-for="Password" class="text-danger"></span>
+
+    @if (Context.Request.Cookies["IsAdmin"] == "True")
+    {
+        <input type="checkbox"aspfor="IsAdmin">@Html.DisplayNameFor(model => model.IsAdmin)
+    }
+    <div class="buttons">
+        <input type="submit" value="Save" />
+        <a asp-action="Index">Back to List</a>
     </div>
-</div>
+</form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

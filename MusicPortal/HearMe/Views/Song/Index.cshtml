@@ -3,81 +3,50 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="songs-list">
+    <h3>Songs list</h3>
+    <p>
+        <a asp-controller="Song" asp-action="Create">Add new song</a>
+    </p>
+    @foreach (var item in Model) {
+        <div class="song-container">
+            <img src="@item.PreviewPath" alt="preview"/>
+            <div class="name-genre">
+                <h5>@item.Name</h5>
+                <p>@item.GenreName</p>
+            </div>
 
-<h1>Index</h1>
+            <button id="btn-play">
+                <span class="material-symbols-outlined">
+                    play_circle
+                </span>
+                <input id="path" type="hidden" value="@item.SongPath" />
+            </button>
+            
+            <p class="user">@item.UserLogin</p>
 
-<p>
-    <a asp-controller="Song" asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SongPath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PreviewPath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rating)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GenreId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GenreName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserLogin)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SongPath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PreviewPath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GenreId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GenreName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserLogin)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
+            @if (Context.Request.Cookies["Login"] == item.UserLogin || Context.Request.Cookies["IsAdmin"]!.ToString() == "True")
+            {
+                 @Html.ActionLink("Edit", "Edit" ,"Song", new { /* id=item.PrimaryKey */ }) 
+                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
+                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            }
+        </div>
+        <hr/>
+    }
+</div>
+@section Scripts{
+    <script>
+       const playbtns = document.querySelectorAll('#btn-play');
+        const player = document.getElementById("audio");
+        playbtns.forEach((el) => {
+            el.addEventListener("click", (ev) => {
+                ev.preventDefault();
+                const path = el.querySelector("#path");
+                player.src = path.value;
+                player.play();
+            });
+        });
+    </script>
 }
-    </tbody>
-</table>
+

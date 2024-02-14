@@ -45,8 +45,7 @@ namespace HearMe.Controllers
 
         // POST: SongController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, Name, Rating, UserId, GenreId")] SongDTM model, IFormFile? previewfile, IFormFile? songfile)
+        public async Task<IActionResult> Create([Bind("Id, Rating, UserId, GenreId")] SongDTM model, IFormFile? previewfile, IFormFile? songfile)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -74,6 +73,7 @@ namespace HearMe.Controllers
                 }
                 await SongAudioUpload(model, songfile);
                 await SongPreviewUpload(model, previewfile);
+                model.Name = Path.GetFileNameWithoutExtension(songfile.FileName);
                 await _songService.CreateItem(model);
                 TempData["SM"] = "Song was added successfully!";
                 return RedirectToAction(nameof(Index));

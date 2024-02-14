@@ -16,7 +16,7 @@ namespace HearMe
             builder.Services.AddSession();
 
             string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddMusicPortalContext(connection);
+            builder.Services.AddMusicPortalContext(connection!);
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddUnitOfWorkService();

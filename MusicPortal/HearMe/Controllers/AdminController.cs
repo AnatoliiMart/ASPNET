@@ -24,12 +24,12 @@ namespace HearMe.Controllers
         public async Task<IActionResult> GetUsersToConfirmList() => View(await _userToConfirmService.GetUsersToConfirmList());
 
         // POST: AdminController/ConfirmUser/id
-        public async Task<IActionResult> ConfirmUser(int id, bool isAdmin)
+        public async Task<IActionResult> ConfirmUser(int id)
         {
             try
             {
                 UserDTM? user = await _userToConfirmService.GetUserToConfirm(id);
-                user.IsAdmin = isAdmin;
+                user.IsAdmin = ViewBag.isAdmin;
                 await _userService.CreateItem(user);
                 await _userToConfirmService.DeleteUserToConfirm(id);
                 TempData["SM"] = $"User {user.Login} was confirmed and added to legal users list";

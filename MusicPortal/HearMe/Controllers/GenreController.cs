@@ -38,6 +38,7 @@ namespace HearMe.Controllers
         }
 
         // GET: GenreController/Edit/5
+        [HttpGet]
         public async Task<IActionResult> EditGenre(int id)
         {
             try
