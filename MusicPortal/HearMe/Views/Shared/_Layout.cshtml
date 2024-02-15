@@ -46,7 +46,19 @@
                         <span class="material-symbols-outlined">
                             library_music
                         </span>
-                        <a asp-action="Index" asp-controller="Song">Songs</a>
+                        <a asp-action="Index" asp-controller="Song">All Songs</a>
+                    </div>
+                    <div class="menu-item">
+                        <span class="material-symbols-outlined">
+                            library_music
+                        </span>
+                        <a asp-action="SelfSongs" asp-controller="Song">Self Songs</a>
+                    </div>
+                    <div class="menu-item">
+                        <span class="material-symbols-outlined">
+                            library_music
+                        </span>
+                        <a asp-action="Index" asp-controller="Admin">Songs Administrating</a>
                     </div>
                     <div class="menu-item">
                         <span class="material-symbols-outlined">
@@ -55,11 +67,16 @@
                         <a asp-action="Index" asp-controller="Genre">Genres</a>
                     </div>
                     <div class="menu-item">
-                        <span></span>
-                        <a asp-action="GetUsersToConfirmList" asp-controller="Admin">Confirm user</a>
+                        <span class="material-symbols-outlined">
+                            contact_mail
+                        </span>
+                        <a asp-action="GetUsersToConfirmList" asp-controller="Admin">Users to confirm</a>
                     </div>
                     <div class="menu-item">
-                        <span></span>
+                        <span class="material-symbols-outlined">
+                            contact_mail
+                        </span>
+                        <a asp-action="GetUsersList" asp-controller="Admin">All users list</a>
                     </div>
                 </menu>
             </div>
@@ -79,6 +96,8 @@
             <div class="main-controls">
                 <button class="play-pause">&#9658;</button>
                 <div class="time-display">0:00 / 0:00</div>
+            </div>
+            <div id="song-info">
             </div>
             <div class="additional-controls">
                 <div class="volume-icon">

@@ -7,7 +7,7 @@ namespace HearMe.Controllers
         public IActionResult Index()
         {
             return HttpContext.Request.Cookies["Login"] != null
-                   ? View()
+                   ? RedirectToAction("Index", "Song")
                    : RedirectToAction("Login", "Account");
         }
 

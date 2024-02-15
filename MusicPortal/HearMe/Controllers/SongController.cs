@@ -2,6 +2,7 @@
 using HearMe.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualBasic.FileIO;
 
 namespace HearMe.Controllers
 {
@@ -27,6 +28,11 @@ namespace HearMe.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _songService.GetItemsList());
+        }
+        [HttpGet]
+        public async Task<IActionResult> SelfSongs()
+        {
+            return View((await _songService.GetItemsList()).Where(item => item.UserLogin == HttpContext.Request.Cookies["Login"]));
         }
 
         // GET: SongController/Details/5
@@ -86,46 +92,77 @@ namespace HearMe.Controllers
         }
 
         // GET: SongController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            ViewData["GenreId"] = new SelectList(await _genreService.GetItemsList(), "Id", "Name");
+            return View(await _songService.GetItem(id));
         }
 
         // POST: SongController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, SongDTM model, IFormFile? fileUpload)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "Model is not valid!");
+                    return View(model);
+                }
+                SongDTM song = await _songService.GetItem(id);
+                song.Name = model.Name;
+                song.GenreName = model.GenreName;
+                song.GenreId = model.GenreId;
+                if (fileUpload != null && fileUpload.Length > 0)
+                {
+                    if (await ValidateImageExtention(fileUpload.ContentType.ToLower()))
+                    {
+                        ModelState.AddModelError("", "The extintion of song preview file is incorrect");
+                        return View(model);
+                    }
+                    string path = "/img/" + fileUpload.FileName;
+                    if (song.PreviewPath != null)
+                    {
+                        string oldPath = song.PreviewPath;
+                        FileSystem.DeleteFile(_appEnvironment.WebRootPath + oldPath);
+                    }
+                    await SongPreviewUpload(song, fileUpload);
+                }
+                else
+                {
+                    IEnumerable<string> oldPath = from _song in await _songService.GetItemsList()
+                                                  where _song.Id == model.Id
+                                                  select _song.PreviewPath;
+                    song.PreviewPath = oldPath.First();
+                }
+                await _songService.UpdateItem(song);
+                TempData["SM"] = "Song was edited sucessfully";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
             }
         }
 
         // GET: SongController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: SongController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
+                await _songService.DeleteItem(id);
+                TempData["SM"] = "Song was deleted sucessfully";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception)
             {
-                return View();
+                return NotFound();
             }
         }
+
         private async Task<bool> ValidateImageExtention(string extention) =>
             await Task.Run(() =>
                 (extention != "image/jpg" &&

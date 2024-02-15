@@ -1,0 +1,40 @@
+﻿@model IEnumerable<HearMe.BLL.DTM.UserDTM>
+
+@{
+    ViewData["Title"] = "GetUsersList";
+}
+
+<div class="users">
+    @if (TempData["SM"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SM"]
+        </div>
+    }
+    <h3>Users List</h3>
+    @if (!Model.Any())
+    {
+        <h2>No users</h2>
+    }
+    else
+    {
+        @foreach (var item in Model)
+        {
+            <div class="user-container">
+                <img src="@item.AvatarPath" alt="no avatar" />
+                <div class ="user-info">
+                    <h4 class="full-name">@item.FirstName&nbsp;@item.LastName</h4>
+                    <div class="login-info">
+                        <h4>Login:&nbsp;</h4>
+                        <h4 class="login">@item.Login</h4>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button><a asp-action="EditUser" asp-route-id="@item.Id">Edit user</a></button>
+                    <button><a asp-action="UserDetails" asp-route-id="@item.Id">User details</a></button>
+                    <button><a asp-action="DeleteUser" asp-route-id="@item.Id">Delete</a></button>
+                </div>
+            </div>
+        }
+    }
+</div>

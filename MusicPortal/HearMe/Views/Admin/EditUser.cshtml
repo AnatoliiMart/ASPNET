@@ -1,14 +1,14 @@
 ﻿@model HearMe.BLL.DTM.UserDTM
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "EditUser";
 }
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data">
-    <h3>Account settings</h3>
+<form asp-action="EditUser" method="post" enctype="multipart/form-data">
+    <h3>Edit User</h3>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id"/>
-    <input type="hidden" asp-for="Login" value = "@Context.Request.Cookies["Login"] class="form-control" />
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Login" value="@Context.Request.Cookies["Login"] class="form-control" />
 
     <label asp-for="FirstName"></label>
     <input asp-for="FirstName" />
@@ -19,19 +19,20 @@
     <span asp-validation-for="LastName" class="text-danger"></span>
 
     <label asp-for="AvatarPath"></label>
-    <input type="file" name="fileUpload" asp-for="AvatarPath" >
+    <input type="file" name="fileUpload" asp-for="AvatarPath">
     <span asp-validation-for="AvatarPath" class="text-danger"></span>
+    <input type="hidden" asp-for="Password" value="123" />
+    @if (Context.Request.Cookies["IsAdmin"] == "True")
+    {
+        <input type="checkbox" asp-for="IsAdmin">
 
-    <label asp-for="Password"></label>
-    <input asp-for="Password" value="@string.Empty" />
-    <span asp-validation-for="Password" class="text-danger"></span>
-
+        @Html.DisplayNameFor(model => model.IsAdmin)
+    }
     <div class="buttons">
         <button type="submit">Edit</button>
         <button><a asp-action="Index">Back to List</a></button>
     </div>
 </form>
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

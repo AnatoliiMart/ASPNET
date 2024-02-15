@@ -1,0 +1,35 @@
+﻿@model HearMe.BLL.DTM.SongDTM
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <h3>Edit</h3>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Id"/>
+
+    <label asp-for="Name" ></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+
+    <label asp-for="PreviewPath"></label>
+    <input type="file" name="fileUpload" asp-for="PreviewPath"/>
+    <span asp-validation-for="PreviewPath" class="text-danger"></span>
+
+    <label>Select genre</label>
+    <select asp-for="GenreId" asp-items="ViewBag.GenreId" ></select>
+    <div class="buttons">
+        <button type="submit" class="btn btn-primary">Edit</button>
+        <button><a asp-action="Index">Back to List</a></button>
+    </div>
+</form>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

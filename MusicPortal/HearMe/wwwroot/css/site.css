@@ -140,14 +140,14 @@ audio {
     width:30%;
     align-self:center;
 }
-form input{
+form input, select{
     width: 50%;
     border: none;
     border-radius: 15px;
     padding: 5px 15px;
     background: #808080;
 }
-form input:focus{
+form input:focus, select:focus{
     background: #b8ffbc;
 }
 form label{
@@ -226,12 +226,16 @@ form {
     width: 80%;
     display:flex;
     flex-direction:column;
+   
 }
-.song-container{
-    display:flex;
-    flex-direction:row;
+.song-container {
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content:space-evenly
+    justify-content: space-evenly;
+    border-bottom: 2px solid #808080;
+    border-radius: 25px;
+    margin-bottom: 10px;
 }
 .song-container img{
     width: 50px;
@@ -241,11 +245,25 @@ form {
 .song-container .user{
     justify-self: flex-end;
 }
+.song-container .buttons{
+    width:30%;
+    margin: 0;
+}
+.song-container .buttons button{
+    width: 25%;
+}
+.song-container .user-login{
+    width: 10%;
+    padding-top:12px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
 .name-genre{
-    width:40%;
+    margin-top: 10px;
+    width:25%;
     display:flex;
     padding-left: 20px;
-
     flex-direction:column;
     justify-content:center;
 }
@@ -278,4 +296,58 @@ form {
 }
 .genre .buttons{
     margin:0 !important;
+}
+.users{
+    width:80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.users .user-container{
+    margin-bottom: 25px;
+    padding: 10px 0;
+    width:95%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    border-bottom: 2px solid #808080;
+    border-radius: 25px;
+    box-shadow: -10px 10px 10px 0px rgba(128,128,128,1);
+}
+.users .user-container img {
+    width: 80px;
+    padding: 5px;
+    border: 2px solid #808080;
+    border-radius: 25%;
+}
+.users .user-container p{
+    margin: 0;
+}
+.users .user-container .user-info{
+    width:25%;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+}
+.users .user-container .buttons{
+    margin: 0;
+    width: 40%
+}
+.users .user-container .buttons button {
+    width: 25%;
+}
+.full-name{
+    font-style:italic;
+    font-weight: bold;
+    color: #21cf06
+}
+.login-info{
+    display: flex;
+    justify-content: space-evenly;
+}
+.login {
+    font-weight: bold;
+    color: #31f5f5
 }

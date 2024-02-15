@@ -4,22 +4,21 @@
     ViewData["Title"] = "Regist";
 }
 
-<h1>Registration</h1>
-
 <form asp-action="Regist" method="post" enctype="multipart/form-data">
+    <h3>Registration</h3>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <label asp-for="FirstName"></label>
     <input asp-for="FirstName"/>
-
     <span asp-validation-for="FirstName" class="text-danger"></span>
+
     <label asp-for="LastName"></label>
     <input asp-for="LastName"/>
-
     <span asp-validation-for="LastName" class="text-danger"></span>
+
     <label asp-for="Login"></label>
     <input asp-for="Login"/>
-
     <span asp-validation-for="Login" class="text-danger"></span>
+
     <label asp-for="AvatarPath"></label>
     <input type="file" name="fileUpload" asp-for="AvatarPath" />
     <span asp-validation-for="AvatarPath" class="text-danger"></span>
@@ -31,7 +30,8 @@
     <label asp-for="ConfirmPassword"></label>
     <input asp-for="ConfirmPassword"/>
     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    <div class="form-group">
+
+    <div class="buttons">
         <button type="submit" class="btn btn-primary">Create account</button>
         <button><a asp-action="Login" asp-controller="Account">Back to Login</a></button>
     </div>

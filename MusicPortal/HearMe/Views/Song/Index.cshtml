@@ -3,11 +3,15 @@
 @{
     ViewData["Title"] = "Index";
 }
+
 <div class="songs-list">
+    @if (TempData["SM"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SM"]
+        </div>
+    }
     <h3>Songs list</h3>
-    <p>
-        <a asp-controller="Song" asp-action="Create">Add new song</a>
-    </p>
     @foreach (var item in Model) {
         <div class="song-container">
             <img src="@item.PreviewPath" alt="preview"/>
@@ -22,29 +26,24 @@
                 </span>
                 <input id="path" type="hidden" value="@item.SongPath" />
             </button>
-            
-            <p class="user">@item.UserLogin</p>
-
-            @if (Context.Request.Cookies["Login"] == item.UserLogin || Context.Request.Cookies["IsAdmin"]!.ToString() == "True")
-            {
-                 @Html.ActionLink("Edit", "Edit" ,"Song", new { /* id=item.PrimaryKey */ }) 
-                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
-                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            }
+            <div class="user-login">
+                <p class="user">@item.UserLogin</p>
+            </div>
         </div>
-        <hr/>
     }
 </div>
 @section Scripts{
     <script>
        const playbtns = document.querySelectorAll('#btn-play');
         const player = document.getElementById("audio");
+        const playPauseBtn = document.querySelector('.play-pause');
         playbtns.forEach((el) => {
             el.addEventListener("click", (ev) => {
                 ev.preventDefault();
                 const path = el.querySelector("#path");
                 player.src = path.value;
                 player.play();
+                playPauseBtn.textContent = '❚❚';
             });
         });
     </script>

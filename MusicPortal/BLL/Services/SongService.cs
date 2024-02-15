@@ -55,8 +55,8 @@ namespace HearMe.BLL.Services
         public async Task<IEnumerable<SongDTM>> GetItemsList()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Song, SongDTM>()
-                             .ForMember("GenreName", opt => opt.MapFrom(s => s.Genre.Name ?? "NoGenre"))
-                             .ForMember("UserLogin", opt => opt.MapFrom(s => s.User.Login ?? "NoUserLogin")));
+                             .ForMember("GenreName", opt => opt.MapFrom(s => s.Genre!.Name ?? "NoGenre"))
+                             .ForMember("UserLogin", opt => opt.MapFrom(s => s.User!.Login ?? "NoUserLogin")));
             var mapper = new Mapper(config);
             return mapper.Map<IEnumerable<Song>, IEnumerable<SongDTM>>(await DataBase.Songs.GetAll());
         }
@@ -65,16 +65,14 @@ namespace HearMe.BLL.Services
         {
             if (song == null)
                 throw new ValidationException("", "Wrong data income!");
-            var sng = new Song
-            {
-                Id = song.Id,
-                Name = song.Name,
-                SongPath = song.SongPath,
-                PreviewPath = song.PreviewPath,
-                Rating = song.Rating,
-                UserId = song.UserId,
-                GenreId = song.GenreId
-            };
+            var sng = await DataBase.Songs.Get(song.Id);
+            sng!.Id = song.Id;
+            sng.Name = song.Name;
+            sng.SongPath = song.SongPath;
+            sng.PreviewPath = song.PreviewPath;
+            sng.Rating = song.Rating;
+            sng.UserId = song.UserId;
+            sng.GenreId = song.GenreId;
             DataBase.Songs.Update(sng);
             await DataBase.Save();
         }

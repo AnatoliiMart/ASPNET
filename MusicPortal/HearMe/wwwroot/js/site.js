@@ -18,7 +18,7 @@
     volumeControl.addEventListener('input', adjustVolume);
     progress.style.width = 0;
 
-    function togglePlayPause() {
+ function togglePlayPause() {
         if (audio.paused) {
             audio.play();
             playPauseBtn.textContent = '❚❚';

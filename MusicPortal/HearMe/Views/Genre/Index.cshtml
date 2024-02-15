@@ -3,20 +3,26 @@
 @{
     ViewData["Title"] = "Index";
 }
+
 <div class="genre-container">
-<h1>Genres list</h1>
+    <h1>Genres list</h1>
+        @if (TempData["SM"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SM"]
+            </div>
+        }
+    <p>
+        <a asp-action="CreateGenre">Add new genre</a>
+    </p>
 
-<p>
-    <a asp-action="CreateGenre">Add new genre</a>
-</p>
-
-@foreach (var item in Model) {
-    <div class="genre">
-       <h3>@item.Name</h3>
-        <div class="buttons">
-            <button><a asp-action="EditGenre" asp-controller="Genre" asp-route-id="@item.Id">Edit</a></button>
-            <button><a asp-action="DeleteGenre" asp-controller="Genre" asp-route-id="@item.Id">Delete</a></button>
+    @foreach (var item in Model) {
+        <div class="genre">
+           <h3>@item.Name</h3>
+            <div class="buttons">
+                <button><a asp-action="EditGenre" asp-controller="Genre" asp-route-id="@item.Id">Edit</a></button>
+                <button><a asp-action="DeleteGenre" asp-controller="Genre" asp-route-id="@item.Id">Delete</a></button>
+            </div>
         </div>
-    </div>
     }
 </div>

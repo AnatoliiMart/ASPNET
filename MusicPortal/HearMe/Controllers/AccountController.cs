@@ -2,6 +2,7 @@
 using HearMe.BLL.Interfaces;
 using HearMe.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic.FileIO;
 
 namespace HearMe.Controllers
@@ -54,11 +55,13 @@ namespace HearMe.Controllers
                 ModelState.AddModelError("", "Incorrect login or password!");
                 return View(model);
             }
-            CookieOptions option = new();
-            option.Expires = DateTime.Now.AddDays(30);
+            CookieOptions option = new()
+            {
+                Expires = DateTime.Now.AddDays(30)
+            };
 
             HttpContext.Response.Cookies.Append("FullName", user.FirstName + " " + user.LastName, option);
-            HttpContext.Response.Cookies.Append("Login", user.Login!);
+            HttpContext.Response.Cookies.Append("Login", user.Login!, option);
             HttpContext.Response.Cookies.Append("IsAdmin", user.IsAdmin.ToString(), option);
             return RedirectToAction("Index", "Home");
         }
@@ -129,7 +132,7 @@ namespace HearMe.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,/* [Bind("Id FirstName, LastName, Password, IsAdmin")]*/ UserDTM model, IFormFile? fileUpload)
+        public async Task<IActionResult> Edit(int id, UserDTM model, IFormFile? fileUpload)
         {
             if (!ModelState.IsValid)
             {
@@ -140,7 +143,7 @@ namespace HearMe.Controllers
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.IsAdmin = model.IsAdmin;
-            if (model.Password != null || model.Password != string.Empty)
+            if (!model.Password.IsNullOrEmpty())
                 await _passwordService.ChangePassword(user.Id, model.Password);
 
             if (fileUpload != null && fileUpload.Length > 0)
