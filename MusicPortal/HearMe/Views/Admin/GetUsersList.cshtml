@@ -30,9 +30,9 @@
                     </div>
                 </div>
                 <div class="buttons">
-                    <button><a asp-action="EditUser" asp-route-id="@item.Id">Edit user</a></button>
-                    <button><a asp-action="UserDetails" asp-route-id="@item.Id">User details</a></button>
-                    <button><a asp-action="DeleteUser" asp-route-id="@item.Id">Delete</a></button>
+                    <a asp-action="EditUser" asp-route-id="@item.Id" class="button submit-btn">Edit user</a>
+                    <a asp-action="UserDetails" asp-route-id="@item.Id" class=" button submit-scnd-btn">User details</a>
+                    <a asp-action="DeleteUser" asp-route-id="@item.Id" class="button reject-btn">Delete</a>
                 </div>
             </div>
         }

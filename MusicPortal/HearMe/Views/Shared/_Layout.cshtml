@@ -54,30 +54,33 @@
                         </span>
                         <a asp-action="SelfSongs" asp-controller="Song">Self Songs</a>
                     </div>
-                    <div class="menu-item">
-                        <span class="material-symbols-outlined">
-                            library_music
-                        </span>
-                        <a asp-action="Index" asp-controller="Admin">Songs Administrating</a>
-                    </div>
-                    <div class="menu-item">
-                        <span class="material-symbols-outlined">
-                            lyrics
-                        </span>
-                        <a asp-action="Index" asp-controller="Genre">Genres</a>
-                    </div>
-                    <div class="menu-item">
-                        <span class="material-symbols-outlined">
-                            contact_mail
-                        </span>
-                        <a asp-action="GetUsersToConfirmList" asp-controller="Admin">Users to confirm</a>
-                    </div>
-                    <div class="menu-item">
-                        <span class="material-symbols-outlined">
-                            contact_mail
-                        </span>
-                        <a asp-action="GetUsersList" asp-controller="Admin">All users list</a>
-                    </div>
+                    @if (Context.Request.Cookies["IsAdmin"] == "True")
+                    {
+                        <div class="menu-item">
+                            <span class="material-symbols-outlined">
+                                library_music
+                            </span>
+                            <a asp-action="Index" asp-controller="Admin">Songs Administrating</a>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-symbols-outlined">
+                                lyrics
+                            </span>
+                            <a asp-action="Index" asp-controller="Genre">Genres</a>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-symbols-outlined">
+                                contact_mail
+                            </span>
+                            <a asp-action="GetUsersToConfirmList" asp-controller="Admin">Users to confirm</a>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-symbols-outlined">
+                                contact_mail
+                            </span>
+                            <a asp-action="GetUsersList" asp-controller="Admin">All users list</a>
+                        </div>
+                    }
                 </menu>
             </div>
                 @RenderBody()

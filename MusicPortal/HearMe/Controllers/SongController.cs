@@ -139,7 +139,9 @@ namespace HearMe.Controllers
                 }
                 await _songService.UpdateItem(song);
                 TempData["SM"] = "Song was edited sucessfully";
-                return RedirectToAction(nameof(Index));
+                return HttpContext.Request.Cookies["IsAdmin"] == "True"
+                       ? RedirectToAction("Index", "Admin")
+                       : RedirectToAction(nameof(SelfSongs));
             }
             catch (Exception ex)
             {
@@ -155,7 +157,9 @@ namespace HearMe.Controllers
             {
                 await _songService.DeleteItem(id);
                 TempData["SM"] = "Song was deleted sucessfully";
-                return RedirectToAction(nameof(Index));
+                return HttpContext.Request.Cookies["IsAdmin"] == "True"
+                       ? RedirectToAction("Index", "Admin")
+                       : RedirectToAction(nameof(SelfSongs));
             }
             catch (Exception)
             {

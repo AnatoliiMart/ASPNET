@@ -5,10 +5,14 @@
 }
 
 <div class="songs-list">
+    @if (TempData["SM"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SM"]
+        </div>
+    }
     <h3>Songs list</h3>
-    <p>
-        <a asp-controller="Song" asp-action="Create">Add new song</a>
-    </p>
+    <a asp-controller="Song" asp-action="Create" class="button submit-scnd-btn">Add new song</a>
     @foreach (var item in Model)
     {
         <div class="song-container">
@@ -32,9 +36,9 @@
             @if (Context.Request.Cookies["Login"] == item.UserLogin)
             {
                 <div class="buttons">
-                    <button><a asp-action="Edit" asp-controller="Song" asp-route-id="@item.Id">Edit</a></button>
-                    <button><a asp-action="Details" asp-controller="Song" asp-route-id="@item.Id">Details</a></button>
-                    <button><a asp-action="Delete" asp-controller="Song" asp-route-id="@item.Id">Delete</a></button>
+                    <a asp-action="Edit" asp-controller="Song" asp-route-id="@item.Id" class="button submit-btn">Edit</a>
+                    <a asp-action="Details" asp-controller="Song" asp-route-id="@item.Id" class="button submit-scnd-btn">Details</a>
+                    <a asp-action="Delete" asp-controller="Song" asp-route-id="@item.Id" class="button reject-btn">Delete</a>
                 </div>
             }
         </div>

@@ -19,8 +19,8 @@
 
     <input type="hidden" asp-for="UserId" value = "@ViewBag.UserId"/>
     <div class="buttons">
-        <button type="submit" class="btn btn-primary">Add song</button>
-        <button><a asp-action="Index" asp-controller="Song">Back to List</a></button>
+        <button type="submit" class="submit-btn">Create</button>
+        <a asp-action="Index" asp-controller="Song" class="button reject-btn">Back to List</a>
     </div>
 </form>
 

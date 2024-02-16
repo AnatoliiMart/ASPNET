@@ -4,7 +4,7 @@
     ViewData["Title"] = "Regist";
 }
 
-<form asp-action="Regist" method="post" enctype="multipart/form-data">
+<form asp-action="Regist" method="post" enctype="multipart/form-data" class="loginForm">
     <h3>Registration</h3>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <label asp-for="FirstName"></label>
@@ -32,8 +32,8 @@
     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 
     <div class="buttons">
-        <button type="submit" class="btn btn-primary">Create account</button>
-        <button><a asp-action="Login" asp-controller="Account">Back to Login</a></button>
+        <button type="submit" class="submit-btn">Create account</button>
+        <a asp-action="Login" asp-controller="Account" class="button reject-btn">Back to Login</a>
     </div>
 </form>
 

@@ -63,7 +63,7 @@ namespace HearMe.Controllers
             HttpContext.Response.Cookies.Append("FullName", user.FirstName + " " + user.LastName, option);
             HttpContext.Response.Cookies.Append("Login", user.Login!, option);
             HttpContext.Response.Cookies.Append("IsAdmin", user.IsAdmin.ToString(), option);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Song");
         }
 
         // GET: AccountController/Regist
@@ -181,7 +181,7 @@ namespace HearMe.Controllers
             }
             await _userService.UpdateItem(user);
             TempData["SM"] = "User data is refreshed sucessfully";
-            return View(model);
+            return RedirectToAction("Index", "Song");
         }
     }
 }

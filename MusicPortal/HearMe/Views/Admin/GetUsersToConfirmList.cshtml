@@ -23,9 +23,9 @@
                     </div>
                 </div>
                 <div class="buttons">
-                    <button><a asp-action="ConfirmCommonUser" asp-route-id="@item.Id">Make common</a></button>
-                    <button><a asp-action="ConfirmAdminUser" asp-route-id="@item.Id">Make admin</a></button>
-                    <button><a asp-action="DeclineUser" asp-route-id="@item.Id">Decline</a></button>
+                    <a asp-action="ConfirmCommonUser" asp-route-id="@item.Id" class="button submit-btn">Make common</a>
+                    <a asp-action="ConfirmAdminUser" asp-route-id="@item.Id" class=" button submit-scnd-btn">Make admin</a>
+                    <a asp-action="DeclineUser" asp-route-id="@item.Id" class="button reject-btn">Decline</a>
                 </div>
             </div>
         }

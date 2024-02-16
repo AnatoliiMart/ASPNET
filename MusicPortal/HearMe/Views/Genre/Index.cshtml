@@ -5,23 +5,20 @@
 }
 
 <div class="genre-container">
-    <h1>Genres list</h1>
-        @if (TempData["SM"] != null)
-        {
-            <div class="alert alert-success">
-                @TempData["SM"]
-            </div>
-        }
-    <p>
-        <a asp-action="CreateGenre">Add new genre</a>
-    </p>
-
+    <h3>Genres list</h3>
+    @if (TempData["SM"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SM"]
+        </div>
+    }
+    <a asp-action="CreateGenre" class="button submit-scnd-btn">Add new genre</a>
     @foreach (var item in Model) {
         <div class="genre">
-           <h3>@item.Name</h3>
+           <h4 style="width:150px;">@item.Name</h4>
             <div class="buttons">
-                <button><a asp-action="EditGenre" asp-controller="Genre" asp-route-id="@item.Id">Edit</a></button>
-                <button><a asp-action="DeleteGenre" asp-controller="Genre" asp-route-id="@item.Id">Delete</a></button>
+               <a asp-action="EditGenre" asp-controller="Genre" asp-route-id="@item.Id" class="button submit-btn">Edit</a>
+               <a asp-action="DeleteGenre" asp-controller="Genre" asp-route-id="@item.Id" class="button reject-btn">Delete</a>
             </div>
         </div>
     }

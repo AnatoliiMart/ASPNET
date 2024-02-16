@@ -76,11 +76,12 @@ table {
 
 .progress-bar {
     background-color: #535353;
-    height: 2px;
+    height: 4px;
     width: 100%;
     position: absolute;
     top:0;
     overflow: hidden;
+    cursor:pointer;
 }
 
 .progress {
@@ -136,12 +137,12 @@ audio {
     border-radius: 5px;
 }
 /*End PLAYER styles*/
-#loginForm{
-    width:30%;
+.loginForm{
+    width:40%;
     align-self:center;
 }
 form input, select{
-    width: 50%;
+    width: 60%;
     border: none;
     border-radius: 15px;
     padding: 5px 15px;
@@ -166,14 +167,15 @@ form a{
     flex-wrap: wrap;
     margin-top:20px;
 }
-.buttons button{
-    width:45%;
+.buttons button {
+    display: inline-block;
+    padding: 5px 20px;
+    font-weight: bold;
+    text-decoration: none;
     border: none;
     border-radius: 15px;
-    padding: 5px 0px;
-}
-.buttons button a{
-    text-decoration:none;
+    cursor: pointer; 
+    transition: .3s;
 }
 menu{
     margin:0;
@@ -227,6 +229,10 @@ form {
     display:flex;
     flex-direction:column;
    
+}
+.songs-list a{
+    width: max-content;
+    margin: 10px;
 }
 .song-container {
     display: flex;
@@ -287,8 +293,12 @@ form {
     align-items:flex-start;
     flex-direction: column;
 }
+.genre-container a {
+    width: max-content;
+    margin: 10px;
+}
 .genre{
-    width:30%;
+    width:40%;
     display:flex;
     align-items:center;
     justify-content: space-around;
@@ -350,4 +360,44 @@ form {
 .login {
     font-weight: bold;
     color: #31f5f5
+}
+.button {
+    display: inline-block;
+    text-align:center;
+    padding: 5px 20px;
+    font-weight:bold;
+    text-decoration: none;
+    border: none;
+    border-radius: 15px;
+    transition: .3s;
+}
+.submit-btn {
+    color: #0513b5;
+    background: #21cf06;
+    box-shadow: 0px 0px 15px 3px rgba(21,140,0,1);
+}
+.submit-btn:hover{
+    color: #21cf06;
+    background: #0513b5;
+    box-shadow: 0px 0px 15px 3px rgba(4,15,130,1);
+}
+.reject-btn {
+    color: #0513b5;
+    background: #f85959;
+    box-shadow: 0px 0px 15px 3px rgba(189,0,0,1);
+}
+.reject-btn:hover {
+    color: #f85959;
+    background: #0513b5;
+    box-shadow: 0px 0px 15px 3px rgba(4,15,130,1);
+}
+.submit-scnd-btn {
+    color: #0513b5;
+    background: #eeb30e;
+    box-shadow: 0px 0px 15px 3px rgba(230,97,3,1);
+}
+.submit-scnd-btn:hover {
+    color: #eeb30e;
+    background: #0513b5;
+    box-shadow: 0px 0px 15px 3px rgba(4,15,130,1);
 }

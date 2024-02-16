@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Login";
 }
-<form asp-action="Login" id="loginForm">
+<form asp-action="Login" class="loginForm">
     <h3>Login</h3>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <label asp-for="Login"></label>
@@ -14,7 +14,7 @@
         <span asp-validation-for="Password" class="text-danger"></span>
     <div class="buttons">
         <button type="submit" class="submit-btn">Login</button>
-        <button><a asp-action="Regist" asp-controller="Account" class="reject-btn">Registration</a></button>
+        <a asp-action="Regist" asp-controller="Account" class="button submit-scnd-btn">Registration</a>
     </div>
 </form>
 
