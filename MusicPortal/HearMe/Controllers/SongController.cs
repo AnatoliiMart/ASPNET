@@ -1,5 +1,6 @@
 ﻿using HearMe.BLL.DTM;
 using HearMe.BLL.Interfaces;
+using HearMe.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualBasic.FileIO;
@@ -25,9 +26,41 @@ namespace HearMe.Controllers
 
 
         // GET: SongController
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string song, int genre = 0, int page = 1, SortState sortOrder = SortState.SongNameAsc)
         {
-            return View(await _songService.GetItemsList());
+            int pageSize = 5;
+            IEnumerable<SongDTM> songs = (await _songService.GetItemsList());
+            if (genre != 0)
+            {
+                songs = songs.Where(s => s.GenreId == genre);
+            }
+            if (!string.IsNullOrEmpty(song))
+            {
+                songs = songs.Where(s => s.Name == song);
+            }
+            songs = sortOrder switch
+            {
+                SortState.SongNameAsc => songs.OrderBy(s => s.Name),
+                SortState.SongNameDesc => songs.OrderByDescending(s => s.Name),
+                SortState.SongGenreAsc => songs.OrderBy(s => s.GenreName),
+                SortState.SongGenreDesc => songs.OrderByDescending(s => s.GenreName),
+                SortState.UserAsc => songs.OrderBy(s => s.UserLogin),
+                SortState.UserDesc => songs.OrderByDescending(s => s.UserLogin),
+                _ => songs.OrderBy(s => s.Name),
+            };
+
+
+            var count = songs.Count();
+            var items = songs.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            IndexVM indexVM = new
+               (
+                items,
+                new PageVM(count, page, pageSize),
+                new FilterVM((await _genreService.GetItemsList()).ToList(), genre, song),
+                new SortVM(sortOrder)
+               );
+
+            return View(indexVM);
         }
         [HttpGet]
         public async Task<IActionResult> SelfSongs()

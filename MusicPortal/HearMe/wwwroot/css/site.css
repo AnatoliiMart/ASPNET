@@ -167,7 +167,36 @@ form a{
     flex-wrap: wrap;
     margin-top:20px;
 }
-.buttons button {
+.filter-form{
+    width:70%;
+    display: block;
+}
+.filter {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+}
+.filter select{
+    width: 20%;
+}
+.filter input{
+    width:40%;
+}
+.sorting{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    width: 50%;
+    justify-content: space-evenly;
+}
+.sorting p{
+    font-size:1.2em;
+    color: #a8cb16;
+    margin-top: 20px;
+}
+button {
     display: inline-block;
     padding: 5px 20px;
     font-weight: bold;

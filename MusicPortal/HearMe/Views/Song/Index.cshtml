@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HearMe.BLL.DTM.SongDTM>
+﻿@model HearMe.Models.IndexVM
 
 @{
     ViewData["Title"] = "Index";
@@ -12,7 +12,35 @@
         </div>
     }
     <h3>Songs list</h3>
-    @foreach (var item in Model) {
+    <form method="get" class="filter-form">
+        <div class="filter">
+            <label>Song: </label>
+            <input name="song" value="@Model.FilterViewModel.EnteredSong" />
+            <label>Genre: </label>
+            <select name="genre" asp-items="Model.FilterViewModel.Genres"></select>
+            <button class="submit-btn"type="submit">Filter</button>
+        </div>
+    </form>
+    <div class="sorting">
+        <p>Sorting: </p>
+        <a class="button submit-scnd-btn" asp-action="Index"
+           asp-route-sortOrder="@(Model.SortViewModel.SongNameSort)"
+           asp-route-song="@(Model.FilterViewModel.EnteredSong)"
+           asp-route-genre="@(Model.FilterViewModel.SelectedGenre)">By song name</a>
+
+        <a class="button submit-scnd-btn" asp-action="Index"
+           asp-route-sortOrder="@(Model.SortViewModel.GenreNameSort)"
+           asp-route-song="@(Model.FilterViewModel.EnteredSong)"
+           asp-route-genre="@(Model.FilterViewModel.SelectedGenre)">By genre</a>
+
+        <a class="button submit-scnd-btn" asp-action="Index"
+           asp-route-sortOrder="@(Model.SortViewModel.UserLoginSort)"
+           asp-route-song="@(Model.FilterViewModel.EnteredSong)"
+           asp-route-genre="@(Model.FilterViewModel.SelectedGenre)">By user</a>
+    </div>
+    
+
+    @foreach (var item in Model.Songs) {
         <div class="song-container">
             <img src="@item.PreviewPath" alt="preview"/>
             <div class="name-genre">
@@ -31,7 +59,12 @@
             </div>
         </div>
     }
+    <page-link page-model="Model.PageViewModel" page-action="Index"
+               page-url-song="@(Model.FilterViewModel.EnteredSong)"
+               page-url-genre="@(Model.FilterViewModel.SelectedGenre)"
+               page-url-sortorder="@(Model.SortViewModel.Current)"></page-link>
 </div>
+
 @section Scripts{
     <script>
        const playbtns = document.querySelectorAll('#btn-play');
